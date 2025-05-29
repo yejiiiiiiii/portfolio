@@ -1,0 +1,174 @@
+@charset "utf-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.header {
+    width: 100%;
+    height: 100px;
+    background-color:rgba(255, 255, 255, 0.452);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    color: #333;
+}
+
+.header .inner {
+    max-width: 1280px;
+    width: calc(100% - 32px); /* 기호 앞뒤로 띄어쓰기 필수 */
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+} 
+
+.header .inner .nav ul {
+    display: flex;
+    gap: 30px;
+}
+
+.fp-viewing-0 .header {
+    color: #333;
+}
+
+.fp-viewing-1 .header {
+    background-color: #3333335e;
+    color: #fff;
+}
+
+.fp-viewing-2 .header {
+    background-color:rgba(255, 255, 255, 0.5);
+    color: #111;
+}
+
+#fp-nav ul li,
+.fp-slidesNav ul li {
+    margin: 18px 8px;
+}
+
+#fp-nav ul li a span,
+.fp-slidesNav ul li a span {
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+    background-color: lemonchiffon;
+}
+
+#fp-nav ul li a.active span,
+#fp-nav ul li:hover a.active span,
+.fp-slidesNav ul li a.active span,
+.fp-slidesNav ul li:hover a.active span {
+    width: 24px;
+    height: 24px;
+    margin: -12px 0px 0px -12px;
+    background: url('../img/lightbulb.png') center center / 100% no-repeat;
+}
+
+#fp-nav ul li .fp-tooltip {
+    color: #333;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 10px 6px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+#section1 {
+    background: url('../img/sangsang-pic-V9SGuX3-naE-unsplash.jpg') center center / cover no-repeat;
+}
+
+#section1 .item_wrap {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+}
+
+#section1 .item_wrap .item {
+    width: 120px;
+    height: 120px;
+    background-color: wheat;
+    border-radius: 50%;
+    /* text-align: center;
+    line-height: 120px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#section2 {
+    background: url('../img/leo_visions-f4eH-BXJAVQ-unsplash.jpg') center center / cover no-repeat;
+}
+
+#section2 .swiperSection2 {
+    height: 100%;
+}
+
+#section2 .swiperSection2 .swiper-wrapper .swiper-slide {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#section3 {
+    background: url('../img/jason-leung-o-WaMjIa08g-unsplash.jpg') center center /cover no-repeat;
+}
+
+#section3 .item_wrap {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+#section3 .item_wrap .item {
+    width: 300px;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    transform: translateY(100px);
+    transition: 1s;
+    opacity: 0;
+}
+
+.fp-viewing-2 #section3 .item_wrap .item {
+    transform: translateY(0px);
+    opacity: 1;
+}
+
+.fp-viewing-2 #section3 .item_wrap .item:first-child {}
+.fp-viewing-2 #section3 .item_wrap .item:nth-child(2) {
+    transition-delay: 0.5s;
+}
+.fp-viewing-2 #section3 .item_wrap .item:nth-child(3) {
+    transition-delay: 1s;
+}
+.fp-viewing-2 #section3 .item_wrap .item:nth-child(4) {
+    transition-delay: 1.5s;
+}
+
+#footer {
+    background-color: #333;
+    color: #fff;
+    /* height: 100px; >> 푸터에는 height 값 지정 X*/
+    padding: 80px 0;
+}

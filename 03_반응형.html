@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응형</title>
+    <link rel="stylesheet" href="lib/fullpage.min.css">
+
+    <script src="lib/fullpage.min.js"></script>
+    <script>
+        window.onload = () => {
+            var myFullpage = new fullpage('#fullpage', {
+                sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
+                anchors: ['firstPage', 'secondPage', '3rdPage'],
+                navigation: true,
+                navigationPosition: 'right',
+                navigationTooltips: ['Page 1', 'Page 2', 'Any text!'],
+                showActiveTooltip: true,
+                responsiveWidth: 900,
+                //menu: '#menu'
+            });
+        };
+    </script>
+</head>
+
+<body>
+    <div id="fullpage">
+        <section class="section fp-auto-height-responsive" id="section1">
+            <div class="intro">
+                <h1>Section 1</h1>
+                <p>
+                    Use the `navigationTooltips` option to use a text for each of the bullets in the navigation element.
+                </p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste reprehenderit magnam temporibus
+                    cupiditate architecto repudiandae ipsum, quae atque rerum incidunt nobis quos natus aperiam cum nisi
+                    voluptatem eum a enim?</p>
+            </div>
+        </section>
+        <section class="section fp-auto-height-responsive" id="section2">
+            <h1>Section 2</h1>
+        </section>
+        <section class="section" id="section3">
+            <h1>Section 3</h1>
+        </section>
+    </div>
+</body>
+
+</html>

@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YEJI's PORTFOLIO</title>
     <link rel="stylesheet" href="css/main.css">
+    <script src="lib/jquery-3.7.1.min.js"></script>
+    <script>
+        $(function () {
+            let topBtn = document.querySelector('.top')//.top
+
+            topBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                })
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -24,9 +37,13 @@
         </div><!-- .inner end -->
     </header><!-- .header -->
 
+    <button type="button" class="top">
+        <img src="img/top_btn.svg" alt="top_btn">
+    </button><!-- top end -->
+
     <section class="section section-01">
-        
-    </section>
+
+    </section><!-- .section-01 end -->
 </body>
 
 </html>

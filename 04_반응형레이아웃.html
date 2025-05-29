@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>반응형 레이아웃</title>
+    <link rel="stylesheet" href="lib/fullpage.min.css">
+    <link rel="stylesheet" href="css/04.css">
+
+    <script src="lib/fullpage.min.js"></script>
+    <script>
+        window.onload = () => {
+            var myFullpage = new fullpage('#fullpage', {
+                //sectionsColor: ['#1bbc9b', '#4BBFC3', '#7BAABE', 'whitesmoke', '#ccddff'],
+                anchors: ['firstPage', 'secondPage', '3rdPage'],
+                navigation: true,
+                navigationPosition: 'right',
+                navigationTooltips: ['Page 1', 'Page 2', 'Any text!'],
+                showActiveTooltip: true,
+                responsiveWidth: 1024,
+                //menu: '#menu'
+            });
+        };
+    </script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="inner">
+            <h1 class="logo">
+                <a href="#">logo</a>
+            </h1><!-- .logo end -->
+            <nav class="nav">
+                <ul>
+                    <li><a href="#">menu1</a></li>
+                    <li><a href="#">menu2</a></li>
+                    <li><a href="#">menu3</a></li>
+                    <li><a href="#">menu4</a></li>
+                    <li><a href="#">menu5</a></li>
+                </ul>
+            </nav><!-- .nav end -->
+
+        </div><!-- .inner end -->
+    </header><!-- .header end -->
+
+    <div id="fullpage">
+        <section class="section fp-auto-height-responsive" id="section1">
+            <div class="inner">
+                <div class="item_wrap">
+                    <div class="item">
+                        <a href="#">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae corporis modi eius
+                                aliquid eaque neque soluta laboriosam autem iusto voluptas temporibus, minima sed at
+                                tempora itaque quis! Id, minus officia!</p>
+                        </a>
+                    </div><!-- .item end -->
+
+                    <div class="item">
+                        <a href="#">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae corporis modi eius
+                                aliquid eaque neque soluta laboriosam autem iusto voluptas temporibus, minima sed at
+                                tempora itaque quis! Id, minus officia!</p>
+                        </a>
+                    </div><!-- .item end -->
+
+                    <div class="item">
+                        <a href="#">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae corporis modi eius
+                                aliquid eaque neque soluta laboriosam autem iusto voluptas temporibus, minima sed at
+                                tempora itaque quis! Id, minus officia!</p>
+                        </a>
+                    </div><!-- .item end -->
+
+                    <div class="item">
+                        <a href="#">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae corporis modi eius
+                                aliquid eaque neque soluta laboriosam autem iusto voluptas temporibus, minima sed at
+                                tempora itaque quis! Id, minus officia!</p>
+                        </a>
+                    </div><!-- .item end -->
+                    
+                </div><!-- .item_wrap end -->
+            </div><!-- .inner end -->
+        </section><!-- .section1 end -->
+        <section class="section" id="section2">
+
+        </section>
+        <section class="section" id="section3">
+
+        </section>
+    </div>
+</body>
+
+</html>
