@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YEJI's PORTFOLIO</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="css/main.css">
+
     <script src="lib/jquery-3.7.1.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         $(function () {
             let topBtn = document.querySelector('.top')//.top
@@ -17,7 +21,18 @@
                     behavior: 'smooth'
                 })
             });
+
+            var swiper = new Swiper(".sec01Swiper", {
+                slidesPerView: 2.5,
+                spaceBetween: 30,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+            });
         });
+
+
     </script>
 </head>
 
@@ -25,7 +40,7 @@
     <header class="header">
         <div class="inner">
             <h1 class="logo">
-                <img src="img/logo.svg" alt="logo">
+                <a href="#"><img src="img/logo.svg" alt="logo"></a>
             </h1>
             <nav class="nav">
                 <ul class="gnb">
@@ -41,8 +56,96 @@
         <img src="img/top_btn.svg" alt="top_btn">
     </button><!-- top end -->
 
-    <section class="section section-01">
+    <div class="intro">
+        <div class="inner">
 
+        </div><!-- .inner end -->
+    </div><!-- .intro end -->
+
+    <section class="section section-01">
+        <div class="inner">
+            <div class="title">
+                <img src="img/about_me.svg" alt="about_me_icon">
+                <h2>ABOUT ME</h2>
+            </div><!-- title end -->
+            <!-- washi tape (tape1.svg) ::after 로 추가 -->
+
+            <div class="cont">
+                <div class="me">
+                    <div class="image">
+                        <img src="img/section1.svg" alt="me_icon">
+                        <b>ME</b>
+                    </div><!-- .image end -->
+
+                    <div class="name">
+                        <strong>Name</strong>
+                        <P>성예지</P>
+                    </div><!-- .name end -->
+                    <div class="birth">
+                        <strong>Date of Birth</strong>
+                        <P>1997.0706</P>
+                    </div><!-- .birth end -->
+                </div><!-- .me end -->
+
+                <!-- Swiper -->
+                <div class="swiper sec01Swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="img/section1-1.svg" alt="education_icon">
+                            <strong class="sub-title">Education</strong>
+                            <div class="p_wrap">
+                                <p>2025 [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 <br>
+                                    웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
+                                <p>2022 기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
+                                <p>2021.08 동아대학교 중국학과 졸업</p>
+                                <p>2016.02 부흥고등학교 졸업</p>
+                            </div><!-- p_wrap end -->
+                        </div><!-- swiper-slide -->
+
+                        <div class="swiper-slide">
+                            <img src="img/section1-2.svg" alt="certificates_icon">
+                            <strong class="sub-title">Certificates</strong>
+                            <div class="p_wrap">
+                                <P>2023 컴퓨터그래픽스운용기능사</P>
+                                <P>2022 컴퓨터활용능력 2급</P>
+                                <P>2021 자동차운전면허 2종보통</P>
+                            </div><!-- p_wrap end -->
+                        </div><!-- swiper-slide -->
+
+                        <div class="swiper-slide">
+                            <img src="img/section1-3.svg" alt="work_experience_icon">
+                            <strong class="sub-title">Work Experience</strong>
+                            <div class="p_wrap">
+                                <p>2025 [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 <br>
+                                    웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
+                                <p>2022 기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
+                                <p>2021.08 동아대학교 중국학과 졸업</p>
+                                <p>2016.02 부흥고등학교 졸업</p>
+                            </div><!-- p_wrap end -->
+                        </div><!-- swiper-slide -->
+
+                        <div class="swiper-slide">
+                            <img src="img/section1-4.svg" alt="skill_icon">
+                            <strong class="sub-title">Skills</strong>
+                            <div class="p_wrap">
+                                <div class="design">
+                                    <img src="img/ps.svg" alt="photoshop_icon">
+                                    <img src="img/ai.svg" alt="illustrator_icon">
+                                    <img src="img/lr.svg" alt="lightroom_icon">
+                                    <img src="img/figma.svg" alt="figma">
+                                </div><!-- .design end -->
+                                <div class="tech">
+                                    <img src="img/html.svg" alt="html_icon">
+                                    <img src="img/css.svg" alt="css_icon">
+                                    <img src="img/js.svg" alt="javascript_icon">
+                                    <img src="img/jq.svg" alt="jquery_icon">
+                                </div><!-- .tech end -->
+                            </div><!-- p_wrap end -->
+                        </div><!-- swiper-slide -->
+                    </div><!-- swiper-wrapper -->
+                </div><!-- sec01Swiper -->
+            </div><!-- .cont end -->
+        </div><!-- .inner end -->
     </section><!-- .section-01 end -->
 </body>
 
