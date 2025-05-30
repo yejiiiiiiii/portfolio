@@ -24,13 +24,50 @@
 
             var swiper = new Swiper(".sec01Swiper", {
                 slidesPerView: 2.5,
-                spaceBetween: 30,
+                spaceBetween: 120,
                 pagination: {
                     el: ".swiper-pagination",
                     clickable: true,
+                    type: "progressbar",
                 },
             });
-        });
+
+            function showToast(message) {
+                const toast = document.createElement('div');
+                toast.innerText = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '50px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.background = '#156bd8';
+                toast.style.color = '#fff';
+                toast.style.padding = '12px 24px';
+                toast.style.borderRadius = '20px';
+                toast.style.fontSize = '20px';
+                toast.style.letterSpacing = '2px';
+                toast.style.fontFamily = 'Ownglyph_ryurue-Rg';
+                toast.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+                toast.style.zIndex = 9999;
+                toast.style.transition = 'opacity 0.5s';
+                toast.style.opacity = '1';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 500);
+                }, 2000);
+            }
+
+            $('p[data-copy]').click(function () {
+                const text = $(this).data('copy');
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('복사되었습니다!');
+                }).catch(err => {
+                    showToast('복사 실패 😢');
+                });
+            });
+
+        });//script end
 
 
     </script>
@@ -58,7 +95,7 @@
 
     <div class="intro">
         <div class="inner">
-
+            <!-- ✨✨✨간단한 소개글 - fullpage , 종이 넘기는 효과로 진행 -->
         </div><!-- .inner end -->
     </div><!-- .intro end -->
 
@@ -68,7 +105,7 @@
                 <img src="img/about_me.svg" alt="about_me_icon">
                 <h2>ABOUT ME</h2>
             </div><!-- title end -->
-            <!-- washi tape (tape1.svg) ::after 로 추가 -->
+            <!-- ✨✨✨washi tape (tape1.svg) ::after 로 추가 -->
 
             <div class="cont">
                 <div class="me">
@@ -94,8 +131,7 @@
                             <img src="img/section1-1.svg" alt="education_icon">
                             <strong class="sub-title">Education</strong>
                             <div class="p_wrap">
-                                <p>2025 [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 <br>
-                                    웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
+                                <p>2025 [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
                                 <p>2022 기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
                                 <p>2021.08 동아대학교 중국학과 졸업</p>
                                 <p>2016.02 부흥고등학교 졸업</p>
@@ -116,11 +152,7 @@
                             <img src="img/section1-3.svg" alt="work_experience_icon">
                             <strong class="sub-title">Work Experience</strong>
                             <div class="p_wrap">
-                                <p>2025 [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 <br>
-                                    웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
-                                <p>2022 기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
-                                <p>2021.08 동아대학교 중국학과 졸업</p>
-                                <p>2016.02 부흥고등학교 졸업</p>
+                                <p>2023.01 ~2024.12 레몬하우스 인테리어 마케팅팀</p>
                             </div><!-- p_wrap end -->
                         </div><!-- swiper-slide -->
 
@@ -142,11 +174,53 @@
                                 </div><!-- .tech end -->
                             </div><!-- p_wrap end -->
                         </div><!-- swiper-slide -->
+
+                        <div class="swiper-slide"></div>
+                        <div class="swiper-pagination"></div>
                     </div><!-- swiper-wrapper -->
                 </div><!-- sec01Swiper -->
             </div><!-- .cont end -->
         </div><!-- .inner end -->
     </section><!-- .section-01 end -->
+
+    <section class="section section-02"><!-- ✨✨✨title 메모지 형태로 제작 + 마스킹 테이프 ::after로 위치시키기 + 안에 넣을 프로젝트 목업 만들기-->
+        <div class="inner">
+            <div class="title">
+                <img src="img/work.svg" alt="work_icon">
+                <h2>WORK</h2>
+            </div><!-- title end -->
+            <!-- ✨✨✨washi tape (tape2.svg) ::after 로 추가 -->
+        </div><!-- .inner end -->
+    </section><!-- .section-02 end -->
+
+    <section class="section section-03"> <!-- ✨✨✨title 메모지 형태로 제작 + 마스킹 테이프 ::after로 위치시키기 + 토스트 박스 테두리 브러쉬 효과 추가하는 법 알아보기-->
+        <div class="inner">
+            <div class="title">
+                <img src="img/contact.svg" alt="contact_icon">
+                <h2>CONTACT</h2>
+            </div><!-- title end -->
+            <!--✨✨washi tape (tape3.svg) ::after 로 추가 -->
+
+            <div class="cont">
+                <div class="phone">
+                    <img src="img/section3-1.svg" alt="phone_icon">
+                    <strong>phone</strong>
+                    <p class="copy-text" data-copy="010-2869-8466">010-2869-8466</p>
+                </div><!-- .phone end -->
+
+                <div class="email">
+                    <img src="img/section3-2.svg" alt="e-mail_icon">
+                    <strong>e-mail</strong>
+                    <p class="copy-text" data-copy="syeji7766@gmail.com">syeji7766@gmail.com</p>
+                </div><!-- .email end -->
+            </div><!-- .cont end -->
+        </div><!-- .inner end -->
+    </section><!-- .section-03 end -->
+
+    <button type="button" class="pdf_button">
+        <img src="img/button.svg" alt="open_pdf">
+        <a href="#">open pdf</a>
+    </button>
 </body>
 
 </html>

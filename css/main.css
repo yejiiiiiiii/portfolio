@@ -11,12 +11,12 @@
 }
 
 @font-face {
-  font-family: 'Patrick Hand';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/patrickhand/v23/LDI1apSQOAYtSuYWp8ZhfYe8XsLL.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    font-family: 'Patrick Hand';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/patrickhand/v23/LDI1apSQOAYtSuYWp8ZhfYe8XsLL.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
@@ -26,13 +26,35 @@
     font-style: normal;
 }
 
+/* ===== Scrollbar CSS ===== */ /* ✨✨✨스크롤바 다시 다듬기 */
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #F3F3F3;
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 10px dotted #156bd8;
+}
+
+*::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
 
 
 body {
     font-family: 'Lemon Bird';
-    height: 40000px;
+    height: 3000px;
     cursor: url('../img/mouse.svg') 18 18, auto;
-    background: url('../img/section01bg.png') 100% no-repeat;
+    background-color: #F3F3F3;
+
 }
 
 body:active {
@@ -41,7 +63,10 @@ body:active {
 
 ::selection {
     background-color: #FF689B;
+        /* #156BD8  */
+    ;
     color: #fff;
+    height: 2px;
 }
 
 a,
@@ -63,6 +88,8 @@ strong {
 p {
     font-family: 'Ownglyph_ryurue-Rg';
     font-size: 24px;
+    line-height: 36px;
+    word-break: keep-all;
 }
 
 b {
@@ -70,7 +97,7 @@ b {
     font-size: 36px;
 }
 
-.inner {
+.section .inner {
     max-width: 1440px;
     width: calc(100% - 32px);
     margin: 0 auto;
@@ -106,7 +133,12 @@ b {
     font-size: 24px;
 }
 
-button {
+.header .inner .nav .gnb li:hover a {
+    color: #156bd8;
+    transition: 0.7;
+}
+
+.top {
     width: 60px;
     position: fixed;
     right: 80px;
@@ -114,21 +146,22 @@ button {
     cursor: url('../img/mouse.svg') 18 18, auto;
 }
 
-button img {
+.top img {
     width: 100%;
 }
 
-button:active {
+.top:active {
     cursor: url('../img/click.svg') 16 16, auto;
 }
 
-button:active img {
+.top:active img {
     scale: 0.9;
 }
 
 button.top {
     bottom: 80px;
 }
+
 /* section 🔻 */
 section {
     margin-top: 120px;
@@ -140,11 +173,13 @@ section .title {
 
 /* section-01 1️⃣ */
 .section-01 {}
-.section-01 .inner{
+
+.section-01 .inner {
     position: relative;
 }
 
-.section-01 .inner .title{
+.section-01 .inner .title {
+    height: 200px;
     position: absolute;
     top: 0;
     left: 50%;
@@ -158,6 +193,11 @@ section .title {
     background-color: #fff;
     box-shadow: 2px 4px 8px #999999b4;
     border-radius: 12px;
+}
+
+.section-01 .inner .title::after { /* ✨✨✨구현되도록 수정 */
+    content: "";
+    background: url('../img/tape1.svg') 16 no-repeat center/contain;
 }
 
 .section-01 .inner .title img {
@@ -175,7 +215,8 @@ section .title {
     text-align: center;
 }
 
-.section-01 .inner .me .image{
+
+.section-01 .inner .me .image {
     position: relative;
 }
 
@@ -187,11 +228,53 @@ section .title {
 }
 
 
-.section-01 .inner .sec01Swiper {
-    
+.section-01 .inner .sec01Swiper { /* ✨✨✨스와이퍼 배경이랑 구분되도록 포인트 더하기 */
+   /*  background: url('../img/paper2.png') center; */
 }
 
 
 /* section-02 2️⃣ */
+.section-02{}
+.section-02 .inner{}
+.section-02 .inner .title{
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+.section-02 .inner .title img{}
+.section-02 .inner .title h2{}
 
 /* section-03 3️⃣ */
+.section-03{}
+.section-03 .inner{}
+.section-03 .inner .title{
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+.section-03 .inner .title img{}
+.section-03 .inner .title h2{}
+.section-03 .inner .cont{
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+.section-03 .inner .cont .phone{
+    display: flex;
+    align-items: center;
+    gap: 80px;
+}
+
+.section-03 .inner .cont .phone img {
+    width: 80px;
+}
+
+.section-03 .inner .cont .email{
+    display: flex;
+    align-items: center;
+    gap: 80px;
+}
+
+.section-03 .inner .cont .email img {
+    width: 80px;
+}

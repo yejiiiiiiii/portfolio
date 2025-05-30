@@ -1,0 +1,141 @@
+@charset "utf-8";
+@import url('reset.css');
+
+@font-face {
+    font-family: 'Lemon Bird';
+    src: url('LemonBird-Regular.woff2') format('woff2'),
+        url('LemonBird-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Patrick Hand';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/patrickhand/v23/LDI1apSQOAYtSuYWp8ZhfYe8XsLL.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Ownglyph_ryurue-Rg';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-2@1.0/Ownglyph_ryurue-Rg.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+body {
+    font-family: 'Lemon Bird';
+    height: 40000px;
+    cursor: url('../img/mouse.svg') 18 18, auto;
+    background-color: #F3F3F3;
+}
+
+body:active {
+    cursor: url('../img/click.svg') 16 16, auto;
+}
+
+::selection {
+    background-color: #FF689B;
+    color: #fff;
+}
+
+a,
+a:hover,
+a:focus,
+a:active {
+    cursor: inherit;
+}
+
+h2 {
+    font-size: 36px;
+}
+
+strong {
+    font-family: "Patrick Hand";
+    font-size: 32px;
+}
+
+p {
+    font-family: 'Ownglyph_ryurue-Rg';
+    font-size: 24px;
+    word-break: keep-all;
+}
+
+b {
+    font-family: "Patrick Hand";
+    font-size: 36px;
+}
+
+.inner {
+    max-width: 1440px;
+    width: calc(100% - 32px);
+    margin: 0 auto;
+}
+
+.header {
+    z-index: 9999;
+
+}
+
+.header .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 16px 0 16px;
+}
+
+.header .inner .logo {
+    user-select: none;
+    -webkit-user-drag: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    pointer-events: auto;
+}
+
+.header .inner .nav .gnb {
+    display: flex;
+    gap: 120px;
+}
+
+.header .inner .nav .gnb li a {
+    font-size: 24px;
+}
+
+button {
+    width: 60px;
+    position: fixed;
+    right: 80px;
+    bottom: 80px;
+    cursor: url('../img/mouse.svg') 18 18, auto;
+}
+
+button img {
+    width: 100%;
+}
+
+button:active {
+    cursor: url('../img/click.svg') 16 16, auto;
+}
+
+button:active img {
+    scale: 0.9;
+}
+
+button.top {
+    bottom: 80px;
+}
+
+/* section 🔻 */
+section {
+    margin-top: 120px;
+}
+
+section .title {
+    font-size: 40px;
+}
