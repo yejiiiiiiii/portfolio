@@ -62,7 +62,6 @@
 }
 
 
-
 body {
     font-family: 'Lemon Bird';
     height: 3000px;
@@ -87,7 +86,7 @@ a,
 a:hover,
 a:focus,
 a:active {
-    cursor: inherit;
+    cursor: url('../img/pointer.svg') 16 16, auto;
 }
 
 h2 {
@@ -125,11 +124,8 @@ b {
 
 .header .inner {
     max-width: 1440px;
-    /* 최대 1440px까지만 */
     margin: 0 auto;
-    /* 화면 중앙에 배치 */
     padding: 16px 20px;
-    /* 좌우 여백 확보 */
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -208,7 +204,6 @@ section .title {
     top: 0;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
     align-items: center;
     display: inline-flex;
     /* 콘텐츠 크기에 딱 맞춰서 자동 너비 */
@@ -256,7 +251,6 @@ section .title {
 
 .section-01 .inner .me {
     text-align: center;
-
 }
 
 

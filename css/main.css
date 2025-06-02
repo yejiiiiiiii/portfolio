@@ -26,22 +26,27 @@
     font-style: normal;
 }
 
-/* ===== Scrollbar CSS ===== */ /* ✨✨✨스크롤바 다시 다듬기 */
+/* ===== Scrollbar CSS ===== */
+/* ✨✨✨스크롤바 다시 다듬기 */
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
 }
 
 *::-webkit-scrollbar-track {
     background: #F3F3F3;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: #ffffff;
-    border-radius: 10px;
-    border: 10px dotted #156bd8;
+    background-color: #156bd8;
+    border-radius: 4px;
+    border: 2px solid #F3F3F3;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #0f52a5;
 }
 
 *::-webkit-scrollbar-corner {
@@ -54,17 +59,26 @@ body {
     height: 3000px;
     cursor: url('../img/mouse.svg') 18 18, auto;
     background-color: #F3F3F3;
-
 }
 
 body:active {
     cursor: url('../img/click.svg') 16 16, auto;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: url('../img/paper1.png') no-repeat center top, cover;
+    z-index: -1;
+}
+
 ::selection {
     background-color: #FF689B;
-        /* #156BD8  */
-    ;
+    /* #156BD8  */
     color: #fff;
     height: 2px;
 }
@@ -73,16 +87,16 @@ a,
 a:hover,
 a:focus,
 a:active {
-    cursor: inherit;
+    cursor: url('../img/pointer.svg') 16 16, auto;
 }
 
 h2 {
-    font-size: 36px;
+    font-size: 32px;
 }
 
 strong {
     font-family: "Patrick Hand";
-    font-size: 32px;
+    font-size: 28px;
 }
 
 p {
@@ -94,26 +108,50 @@ p {
 
 b {
     font-family: "Patrick Hand";
-    font-size: 36px;
+    font-size: 32px;
 }
 
-.section .inner {
-    max-width: 1440px;
-    width: calc(100% - 32px);
-    margin: 0 auto;
+/* .paper-top,
+.paper-bottom {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
 }
 
-.header {
+.paper-top{
+    top: 0;
+}
+
+.paper-bottom {
+    bottom: 0;
+}
+
+.paper-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../img/paper1.png');
+} */
+
+.header {/* ✨✨✨ 헤더에 질감/컬러 넣기 */
     z-index: 9999;
-
+    position: fixed;
 }
 
 .header .inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 16px 20px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    padding: 16px 0 16px;
+    background: url('../img/paper.png') center center no-repeat, cover;
 }
 
 .header .inner .logo {
@@ -162,6 +200,17 @@ button.top {
     bottom: 80px;
 }
 
+.intro {
+    /*  <!-- ✨✨✨간단한 소개글 - fullpage , 
+    한글자씩 썼다가 한문장 끝나면 지우고 다시 다음 문장 쓰는 것처럼 연출 -->  */
+}
+
+.section .inner {
+    max-width: 1440px;
+    width: calc(100% - 32px);
+    margin: 0 auto;
+}
+
 /* section 🔻 */
 section {
     margin-top: 120px;
@@ -180,11 +229,12 @@ section .title {
 
 .section-01 .inner .title {
     height: 200px;
-    position: absolute;
+    position: relative;
     top: 0;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
+
+    display: inline-flex;
     align-items: center;
     padding: 60px 80px;
     margin-bottom: 60px;
@@ -195,9 +245,16 @@ section .title {
     border-radius: 12px;
 }
 
-.section-01 .inner .title::after { /* ✨✨✨구현되도록 수정 */
+.section-01 .inner .title::after {
     content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 200px;
+    height: 80px;
     background: url('../img/tape1.svg') 16 no-repeat center/contain;
+    z-index: 10;
 }
 
 .section-01 .inner .title img {
@@ -208,7 +265,7 @@ section .title {
     margin-top: 120px;
     display: flex;
     align-items: center;
-    gap: 120px;
+    gap: 60px;
 }
 
 .section-01 .inner .me {
@@ -228,38 +285,107 @@ section .title {
 }
 
 
-.section-01 .inner .sec01Swiper { /* ✨✨✨스와이퍼 배경이랑 구분되도록 포인트 더하기 */
-   /*  background: url('../img/paper2.png') center; */
+.section-01 .inner .sec01Swiper {
+    /* ✨✨✨스와이퍼 배경이랑 구분되도록 포인트 더하기 */
+    /*  background: url('../img/paper2.png') center; */
 }
+
+.section-01 .inner .sec01Swiper .swiper-wrapper
 
 
 /* section-02 2️⃣ */
-.section-02{}
-.section-02 .inner{}
-.section-02 .inner .title{
-    display: flex;
-    align-items: center;
-    gap: 40px;
+.section-02 {}
+
+.section-02 .inner {
+    position: relative;
 }
-.section-02 .inner .title img{}
-.section-02 .inner .title h2{}
+
+.section-02 .inner .title {
+    height: 200px;
+    position: relative;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: inline-flex;
+    align-items: center;
+    padding: 60px 80px;
+    margin-bottom: 60px;
+    gap: 40px;
+
+    background-color: #fff;
+    box-shadow: 2px 4px 8px #999999b4;
+    border-radius: 12px;
+}
+
+.section-02 .inner .title::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 200px;
+    height: 80px;
+    background: url('../img/tape2.svg') 16 no-repeat center/contain;
+    z-index: 10;
+}
+
+.section-02 .inner .title img {}
+
+.section-02 .inner .title h2 {}
+
+.section-02 .inner .category-tab {
+    
+}
 
 /* section-03 3️⃣ */
-.section-03{}
-.section-03 .inner{}
-.section-03 .inner .title{
-    display: flex;
-    align-items: center;
-    gap: 40px;
+.section-03 {}
+
+.section-03 .inner {
+    position: relative;
 }
-.section-03 .inner .title img{}
-.section-03 .inner .title h2{}
-.section-03 .inner .cont{
+
+.section-03 .inner .title {
+    height: 200px;
+    position: relative;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: inline-flex;
+    align-items: center;
+    padding: 60px 80px;
+    margin-bottom: 60px;
+    gap: 40px;
+
+    background-color: #fff;
+    box-shadow: 2px 4px 8px #999999b4;
+    border-radius: 12px;
+}
+
+.section-03 .inner .title::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 200px;
+    height: 80px;
+    background: url('../img/tape3.svg') 16 no-repeat center/contain;
+    z-index: 10;
+}
+
+.section-03 .inner .title img {}
+
+.section-03 .inner .title h2 {}
+
+.section-03 .inner .cont {
     display: flex;
     flex-direction: column;
     gap: 80px;
 }
-.section-03 .inner .cont .phone{
+
+.section-03 .inner .cont .phone {
     display: flex;
     align-items: center;
     gap: 80px;
@@ -269,7 +395,7 @@ section .title {
     width: 80px;
 }
 
-.section-03 .inner .cont .email{
+.section-03 .inner .cont .email {
     display: flex;
     align-items: center;
     gap: 80px;
@@ -278,3 +404,48 @@ section .title {
 .section-03 .inner .cont .email img {
     width: 80px;
 }
+
+/* sketch_wrapper 🖍 */
+.sketch_wrapper {
+    position: relative;
+    margin: 0 auto;
+}
+
+.sketch_wrapper .notebook-bg {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sketch_wrapper .title {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+}
+
+#drawingPad {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.toolbar {
+    margin-top: 20px;
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 8px;
+    border: none;
+    background-color: #156bd8;
+    color: #fff;
+    cursor: pointer;
+}
+
