@@ -22,6 +22,108 @@
                 })
             });
 
+            //인트로
+            const sentences = $('.handwriting-1, .handwriting-2').toArray();
+            if (sentences.length === 0) {
+                console.warn('인트로용 SVG가 없습니다.');
+                return;
+            }
+
+            let currentIndex = 0;
+
+            // 1) 각 path에 dasharray / dashoffset 세팅
+            function initPaths(svg) {
+                const paths = $(svg).find('path').toArray();
+                paths.forEach((path) => {
+                    const len = path.getTotalLength();
+                    path.style.strokeDasharray = len;
+                    path.style.strokeDashoffset = len;
+                });
+                return paths;
+            }
+
+            // 2) 순서대로 한 획씩 그리기
+            function drawPaths(paths) {
+                return paths.reduce((prev, path) => {
+                    return prev.then(() => {
+                        const len = path.getTotalLength();
+                        return path
+                            .animate(
+                                [
+                                    { strokeDashoffset: len },
+                                    { strokeDashoffset: 0 }
+                                ],
+                                {
+                                    duration: 400,
+                                    easing: 'ease-in-out',
+                                    fill: 'forwards'
+                                }
+                            )
+                            .finished;
+                    });
+                }, Promise.resolve());
+            }
+
+            // 3) 역순으로 한 획씩 지우기 (두 번째 문장은 전체를 더 빠르게)
+            function erasePaths(paths) {
+                const rev = paths.slice().reverse();
+                return rev.reduce((prev, path, idx) => {
+                    return prev.then(() => {
+                        const len = path.getTotalLength();
+                        // 두 번째 문장(currentIndex===1)인 경우 전체를 더 빠르게 지우되,
+                        // 마지막 두 획만 약간 덜 빠르게(예: 400ms), 나머지는 200ms로 설정
+                        const isSecondSentence = (currentIndex === 1);
+                        let dur = 300; // 기본(첫 문장) 속도
+                        if (isSecondSentence) {
+                            // rev[0]과 rev[1]은 원본 마지막 두 획
+                            if (idx === 0 || idx === 1) {
+                                dur = 400;   // 마지막 두 획은 400ms
+                            } else {
+                                dur = 200;   // 나머지 획은 200ms
+                            }
+                        }
+                        return path.animate(
+                            [
+                                { strokeDashoffset: 0 },
+                                { strokeDashoffset: len }
+                            ],
+                            {
+                                duration: dur,
+                                easing: 'ease-in-out',
+                                fill: 'forwards'
+                            }
+                        ).finished;
+                    });
+                }, Promise.resolve());
+            }
+
+            // 4) 무한 루프 애니메이션
+            function animateSequence() {
+                // (1) 모든 SVG 숨기기
+                sentences.forEach((svg) => {
+                    $(svg).removeClass('active');
+                });
+                // (2) 현재 인덱스 SVG만 보이기
+                const currentSVG = sentences[currentIndex];
+                $(currentSVG).addClass('active');
+
+                // (3) path 초기 세팅
+                const paths = initPaths(currentSVG);
+
+                // (4) 그리기 → 0.8초 대기 → 지우기 → 0.5초 대기 → 인덱스 변경 → 재귀
+                drawPaths(paths)
+                    .then(() => new Promise(res => setTimeout(res, 800)))
+                    .then(() => erasePaths(paths))
+                    .then(() => new Promise(res => setTimeout(res, 500)))
+                    .then(() => {
+                        currentIndex = (currentIndex + 1) % sentences.length;
+                        animateSequence();
+                    });
+            }
+
+            // 5) 최초 애니메이션 실행
+            animateSequence();
+
             //섹션1 슬라이드
             var swiper = new Swiper(".sec01Swiper", {
                 slidesPerView: 2.5,
@@ -40,14 +142,20 @@
             //섹션2 카테고리
             $('.tab').click(function () {
                 const filter = $(this).data('filter');
-                $('.tab').removeClass('.active');
-                $(this).addClass('.active');
 
+                // 1) 기존 활성 탭에서 클래스 제거
+                $('.tab').removeClass('tab-active');
+
+                // 2) 클릭된 탭에 tab-active 클래스 추가
+                $(this).addClass('tab-active');
+
+                // 3) 필터 값에 따라 아이템 표시/숨김
                 if (filter === 'all') {
                     $('.item').show();
                 } else {
                     $('.item').hide();
-                    $('.item[data-type="${filter}"]').show();
+                    // 반드시 백틱(``)을 써서 ${filter}를 실제 값으로 치환
+                    $(`.item[data-type="${filter}"]`).show();
                 }
             });
 
@@ -89,52 +197,55 @@
             });
 
             //drawing pad
-            const canvas = document.getElementById('drawingCanvas');
-            const ctx = canvas.getContext('2d');
-            let drawing = false;
-            let currentColor = '#156bd8';
+            const canvas = document.getElementById('drawingPad');
+            const ctx = canvas ? canvas.getContext('2d') : null;
 
-            function resizeCanvas() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
+            if (ctx) {
+                let drawing = false;
+                let currentColor = '#156bd8';
+
+                function resizeCanvas() {
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+                }
+                resizeCanvas();
+                $(window).resize(resizeCanvas);
+
+                $(canvas).mousedown(function () {
+                    drawing = true;
+                });
+                $(canvas).mouseup(function () {
+                    drawing = false;
+                });
+                $(canvas).mousemove(function (e) {
+                    if (!drawing) return;
+
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    ctx.fillStyle = currentColor; // ← 반드시 대문자 S
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                // 색상 버튼: HTML에 data-color 속성이 붙은 버튼을 가정
+                $('.toolbar button[data-color]').click(function () {
+                    currentColor = $(this).data('color');
+                });
+
+                // 지우개 버튼 (id="eraserBtn"가 있을 때)
+                $('#eraserBtn').click(function () {
+                    currentColor = '#fbf8f1'; // 배경색과 동일하게 지우개 효과
+                });
             }
-            resizeCanvas();
-            $(window).resize(resizeCanvas);
-
-            $(canvas).mousedown(function () {
-                drawing = true;
-            });
-            $(canvas).mouseup(function () {
-                drawing = false;
-            });
-            $(canvas).mousemove(function (e) {
-                if (!drawing) return;
-
-                const rect = canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-
-                ctx.fillstyle = currentColor;
-                ctx.beginPath();
-                ctx.arc(x, y, 5, 0, Math.PI * 2);
-                ctx.fill();
-            });
-
-            $('.color-btn').click(function () {
-                currentColor = $(this).data('color');
-            });
-
-            $('#eraserBtn').click(function () {
-                currentColor = '#fbf8f1';
-            })
-
         });//script end
 
 
     </script>
 </head>
 <!-- ✨✨✨ 전체 풀페이지로 작성
-header : 1440px 
 body : paper texture 배치
 intro : writing & erase 효과로 작성
 main (section) : 풀페이지
@@ -147,6 +258,14 @@ section-02 :  -->
         <div class="paper-texture"></div>
         <div class="paper-torn"></div>
     </div><!-- .paper-top -->
+
+    <!-- <h2>#FIGMA</h2>
+    <h2>#UIUX</h2>
+    <h2>#HTML</h2>
+    <h2>#CSS</h2>
+    <h2>#JAVASCRIPT</h2>
+    <h2>#WEB DESIGN</h2>
+    <h2>#GRAPHIC DESIGN</h2> -->
 
     <header class="header">
         <div class="inner">
@@ -169,16 +288,95 @@ section-02 :  -->
 
     <div class="intro">
         <div class="inner">
-            <!-- ✨✨✨간단한 소개글 - fullpage , 한글자씩 썼다가 한문장 끝나면 지우고 다시 다음 문장 쓰는 것처럼 연출 -->
-            <h2>#FIGMA</h2>
-            <h2>#UIUX</h2>
-            <h2>#HTML</h2>
-            <h2>#CSS</h2>
-            <h2>#JAVASCRIPT</h2>
-            <h2>#WEB DESIGN</h2>
-            <h2>#GRAPHIC DESIGN</h2>
+            <!-- ✨ 첫 번째 문장 SVG -->
+            <svg class="handwriting-1" viewBox="0 0 182 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M1.18182 25.5C-0.0181837 17.9 5.01515 15 7.68182 14.5C12.1817 15 15.1819 17.5 15.1819 25.5C15.1819 31.9 10.8486 33.8333 8.68188 34C6.68186 34.3333 2.38182 33.1 1.18182 25.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M22.6819 1.5L23.4319 18.25M24.1819 35L23.4319 18.25M23.4319 18.25C25.6819 15.1667 31.1819 10.85 35.1819 18.25C36.6819 21 36.6819 31.5 35.1819 35"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M45.1819 31.5C45.0152 33.6667 44.2819 38.2 42.6819 39" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M64.6819 1L65.4319 18.5M66.1819 36L65.4319 18.5M65.4319 18.5C68.0152 15.3333 74.1819 11.1 78.1819 19.5C78.6819 22 79.6819 31 77.6819 35.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M86.6819 24C90.3486 24 97.3819 22.5 96.1819 16.5C94.1819 14 88.1819 13 85.6819 19C83.1819 25 86.1819 42.5 99.1819 29"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M105.182 1.5C104.682 11.1667 104.282 31 106.682 33C109.082 35 111.682 32.5 112.682 31"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M114.682 1.5C113.849 13.5 113.382 36.9 118.182 34.5C120.582 33.3 121.849 31 122.182 30"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M127.182 25.5C125.182 18.3 130.682 15.1666 133.682 14.5C135.682 14.1666 139.882 15.5 140.682 23.5C141.482 31.5 136.349 33.8333 133.682 34C132.349 34.1666 129.182 32.7 127.182 25.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M157.182 24H172.682" stroke="#121212" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+
+            <!-- 두 번째 문장 SVG -->
+            <svg class="handwriting-2" viewBox="0 0 403 123" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M44 7.5C44.6667 16.6667 45.6 35.7 44 38.5" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M56 1C55.8333 3.5 55.1 8.8 53.5 10" stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M65 17.5C65.6667 24.3333 66.8 38.1 66 38.5C65 39 64.5 4.50001 78 22C79 25 78 33 78 37.5C76.6667 30.8333 76.3 17.5 85.5 17.5C91 17.5 93 29.5 91 38.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M109 6.5L117.5 21.5M117.5 21.5L126.5 7.5M117.5 21.5V39" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M149.5 8H133.5V38C133.5 38 141.728 38 147 38M132 20H147" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M165.5 6C166.833 17.3333 168.205 37.5 161.5 37.5C154.5 37.5 154.166 31.3333 154.5 29.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M176 7.5V38" stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M187.5 4C187.5 11 187.5 25.2 187.5 26" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M187.5 33.5C186.833 34.1667 186 35.7 188 36.5C190.5 37.5 189 32 187.5 33.5Z" stroke="black" />
+                <path
+                    d="M23.5002 74.5C23.4369 78.5471 23.5657 84.1297 23.7497 89.5M23.7497 89.5C24.0509 98.2839 24.5002 106.5 24.5002 106.5L23.7497 89.5ZM23.7497 89.5L39 90M39 74.5C39.5 84.8333 40 105.6 38 106"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M58.5682 87C54.7348 85 45.9 83.4 45.5 95C45 109.5 54.5 106 57 101.5C59 97.9 58.8333 88.3333 58.5 84L59 106"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M66 84V89M66 122V100.5M66 89C69.5 85.3333 77.3 80.7 80.5 91.5C83.7 102.3 75.8333 104.667 71.5 104.5C70 104 66.8 102.5 66 100.5M66 89V100.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M87 84V88.5M87 121.5V101M87 88.5C90.3333 85.5 97.8 81.5 101 89.5C105 99.5 98 107 91.5 104C89.5 103.2 87.6667 101.667 87 101M87 88.5V101"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M107 84L116 104.5M122.5 84.5L112 120.5" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M138.5 85H155M146 71C146 81.8333 146.4 104 148 106" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path
+                    d="M158.5 97.5C156.1 89.9 161 86 165 85C169 85 170.5 86.5 171.5 94C172.3 100 168.833 103.5 167 104.5C165.167 105.333 160.9 105.1 158.5 97.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M211 88C208 85.8333 201.4 82.9 199 88.5C198.5 92.5 199.5 94.5 206 95C212.5 95.5 209.5 103 208.5 103.5C208.5 103.5 205.5 106 198 103"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M217.5 94.5C220 95 225.4 95.2 227 92C229 88 228 85.5 221.5 85.5C215 85.5 216 96.5 217.5 99.5C219 102.5 221.5 110 232 99.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M237.5 95C241.5 94.8333 249.1 93.4 247.5 89C245.9 84.6 241.167 85.8333 239 87C236.833 89 233.8 95.1 239 103.5C241.5 106.5 246.5 105.5 251 100"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M267.5 84.5L277 106M283 84L272 122" stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M289.5 97.5C288.7 89.5 293.5 86.1666 296 85.5C297.134 85.1975 300.9 84.9 302.5 92.5C304.1 100.1 300.167 103.667 298 104.5C295.5 105.5 290.3 105.5 289.5 97.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M310 84C309.167 92.1667 309.4 107.7 317 104.5C320.2 102.9 321.667 100.167 322 99V85C321.667 92.1667 321.6 106.5 324 106.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M47.5 48L324 52L2 53.5L321.5 58" stroke="#156BD8" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path
+                    d="M374 77.5L369.5 90M383.5 78.5L379.5 89M363.5 92.5C364.5 102.167 371.3 116.3 390.5 95.5M385.5 67C377.333 65.6667 359.9 65.4 355.5 75C350 87 344 92.5 350.5 107.5C355.7 119.5 376.333 120.167 386 119C391.167 118 401.4 111.5 401 93.5C401 78.5 399.5 72.5 385.5 67Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+            </svg>
         </div><!-- .inner end -->
     </div><!-- .intro end -->
+
 
     <div class="main">
         <section class="section section-01">
