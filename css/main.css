@@ -58,6 +58,7 @@ body {
     font-family: 'Lemon Bird';
     background-color: #F3F3F3;
     cursor: url('../img/mouse.svg') 18 18, auto;
+    overflow: hidden;
 }
 
 body:active {
@@ -118,6 +119,68 @@ b {
     font-size: 32px;
 }
 
+.page-container {
+    perspective: 1500px;
+    perspective-origin: center center;
+}
+
+
+/* landing */
+.landing {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: url('../img/paper1.png') no-repeat center center / cover;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 3D 뒤집기 매끄럽게 하기 위한 설정 */
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transform-origin: top center;
+    transform: rotateX(0deg);
+    transition: transform 2s ease-in-out;
+}
+
+.landing.hide {
+    transform: rotateX(90deg);
+}
+
+.landing.hide~.page .top {
+    display: block;
+}
+
+.landing_svg-1,
+.landing_svg-2 {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 100%;
+    max-width: 600px;
+}
+
+.landing_svg-2 {
+    width: 80%;
+    max-width: 800px;
+}
+
+.landing_svg-2 path {
+    stroke-width: 3 !important;
+}
+
+.landing_svg-1.active,
+.landing_svg-2.active {
+    display: block;
+}
+
+/* page */
 .header {
     width: 100%;
     position: fixed;
@@ -147,13 +210,17 @@ b {
     pointer-events: auto;
 }
 
+.header .inner .logo img {
+    width: 80px;
+}
+
 .header .inner .nav .gnb {
     display: flex;
     gap: 120px;
 }
 
 .header .inner .nav .gnb li a {
-    font-size: 24px;
+    font-size: 32px;
 }
 
 .header .inner .nav .gnb li:hover a {
@@ -169,6 +236,8 @@ b {
     cursor: url('../img/mouse.svg') 18 18, auto;
     background-color: transparent;
     z-index: 99999;
+
+    display: none;
 }
 
 .top img {
@@ -191,6 +260,7 @@ button.top {
 
 /* intro 🎀 */
 .intro {
+    width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -198,68 +268,121 @@ button.top {
 
     background: url('../img/paper1.png') no-repeat center center / cover;
 
-    overflow: hidden;
+    overflow: visible;
     position: relative;
 }
+
+/* .intro::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    background: url('../img/Paper2.png') no-repeat center top;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 0;
+    top: 28%;
+    left: -12%;
+} */
 
 .intro .inner {
     position: relative;
     text-align: center;
     width: 100%;
+    max-width: 1440px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.intro .inner .handwriting-1,
-.intro .inner .handwriting-2 {
-    display: none;
-    /* 기본적으로 두 SVG 모두 숨김 */
-    width: 100%;
-    max-width: 600px;
-    /* SVG 최대 크기(원하시는 대로 조정) */
+.intro .title {
+    position: relative;
+    z-index: 2;
+
+    display: inline-flex;
+    margin-bottom: 40px;
+}
+
+.intro .title img {
+    width: 120px;
     height: auto;
-    margin: 0 auto;
+    user-select: none;
+    pointer-events: none;
 }
 
-/* `.active` 클래스가 붙으면 인트로 문장이 보이도록 */
-.intro .inner .handwriting-1.active,
-.intro .inner .handwriting-2.active {
+.intro .path {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 1192px;
+    margin: 0 auto;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.border-path {
+    width: 100%px;
+    height: auto;
     display: block;
 }
 
-/* SVG의 path 기본 스타일 */
-.intro .inner .handwriting-1 path,
-.intro .inner .handwriting-2 path {
-    fill: none;
-    stroke: #121212;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+.intro .text {
+    position: absolute;
+    top: -18%;
+    left: 27%;
+    transform: translateX(-80%) rotate(-10deg);
+    z-index: 3;
+    color: #121212;
+    user-select: none;
+    pointer-events: none;
+    max-width: 1114px;
 }
 
-.intro .inner .handwriting-2 {
-    max-width: 720px;
-    transform: scale(1.2);
-    transform-origin: center;
+.intro .text p {
+    font-family: 'Lemon Bird' !important;
+    font-size: 120px;
 }
 
-.intro .inner .handwriting-2 path {
-    stroke-width: 3;
-    /* 원래 2 → 굵게 변경 */
+.intro .icon-1 {
+    position: absolute;
+    top: 40%;
+    right: 7%;
+    width: 90px;
+    height: auto;
+    z-index: 3;
+    opacity: 0.9;
+    user-select: none;
+    pointer-events: none;
 }
 
-.intro .inner .handwriting-2 path:nth-last-child(2) {
-    stroke: #156bd8 !important;
-    stroke-width: 4 !important;
+.intro .icon-2 {
+    position: absolute;
+    top: -8%;
+    left: 8%;
+    width: 120px;
+    height: auto;
+    z-index: 3;
+    opacity: 0.9;
+    user-select: none;
+    pointer-events: none;
+}
+
+.main {
+    padding-top: 120px;
+}
+
+/* section 🔻 */
+.section {
+    margin-top: 120px;
 }
 
 .section .inner {
     max-width: 1440px;
     width: calc(100% - 32px);
     margin: 0 auto;
-}
-
-/* section 🔻 */
-section {
-    margin-top: 120px;
 }
 
 section .title {
@@ -289,17 +412,18 @@ section .title {
     background-color: #fff;
     box-shadow: 2px 4px 8px #999999b4;
     border-radius: 12px;
+    margin-bottom: 20px;
 }
 
 .section-01 .inner .title::after {
     content: "";
     position: absolute;
-    top: -20px;
+    top: -42px;
     left: 50%;
     transform: translateX(-50%) rotate(-3deg);
     width: 200px;
     height: 80px;
-    background: url('../img/tape1.svg') 16 no-repeat center/contain;
+    background: url('../img/tape1.svg') no-repeat center/contain;
     z-index: 10;
 }
 
@@ -308,10 +432,9 @@ section .title {
 }
 
 .section-01 .inner .cont {
-    margin-top: 120px;
     display: flex;
-    align-items: center;
-    gap: 60px;
+    align-items: flex-start;
+    gap: 120px;
 }
 
 .section-01 .inner .me {
@@ -321,6 +444,7 @@ section .title {
 
 .section-01 .inner .me .image {
     position: relative;
+    margin-bottom: 20px;
 }
 
 .section-01 .inner .me .image b {
@@ -330,28 +454,109 @@ section .title {
     transform: translate(-50%, -50%);
 }
 
+.section-01 .inner .me .text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
 .section-01 .inner .sec01Swiper {
-    /* ✨✨✨스와이퍼 배경이랑 구분되도록 포인트 더하기 */
-    /*  background: url('../img/paper2.png') center; */
+    position: relative;
+    width: 100%;
+    padding-bottom: 80px;
+}
+
+.section-01 .inner .sec01Swiper .swiper-slide {
+    width: 400px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.section-01 .inner .sec01Swiper .swiper-slide:nth-child(2) {
+    width: 300px !important;
+}
+
+.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide img {
+    height: 120px;
 }
 
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 40px;
+    gap: 20px;
 }
 
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .design,
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .tech {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 20px;
 }
 
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap img {
-    width: 50px;
+.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .design img,
+.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .tech img {
+    width: 60px;
+    height: 60px;
+}
+
+.section-01 .inner .sec01Swiper .swiper-button-next,
+.section-01 .inner .sec01Swiper .swiper-button-prev {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+
+    bottom: -20px;
+}
+
+.section-01 .inner .sec01Swiper .swiper-button-next {
+    right: 16px;
+}
+
+.section-01 .inner .sec01Swiper .swiper-button-prev {
+    right: 64px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    display: none !important;
+}
+
+.section-01 .inner .sec01Swiper .swiper-button-next::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: url('../img/next.svg') no-repeat center center;
+    background-size: contain;
+}
+
+.section-01 .inner .sec01Swiper .swiper-button-prev::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: url('../img/prev.svg') no-repeat center center;
+    background-size: contain;
+}
+
+.section-01 .inner .sec01Swiper .swiper-button-next:hover::before,
+.section-01 .inner .sec01Swiper .swiper-button-prev:hover::before {
+    border-left-color: #156BD8;
+    /* Next: border-left 색깔을 파란색으로 */
+    border-right-color: #156BD8;
+    /* Prev: border-right 색깔을 파란색으로 */
+    transform: scale(1.1);
+    /* 10% 정도 확대 */
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 /* section-02 2️⃣ */
@@ -382,16 +587,18 @@ section .title {
 .section-02 .inner .title::after {
     content: "";
     position: absolute;
-    top: -20px;
+    top: -42px;
     left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
+    transform: translateX(-50%) rotate(0deg);
     width: 200px;
     height: 80px;
-    background: url('../img/tape2.svg') 16 no-repeat center/contain;
+    background: url('../img/tape2.svg') no-repeat center/contain;
     z-index: 10;
 }
 
-.section-02 .inner .title img {}
+.section-02 .inner .title img {
+    width: 120px;
+}
 
 .section-02 .inner .title h2 {}
 
@@ -425,16 +632,18 @@ section .title {
 .section-03 .inner .title::after {
     content: "";
     position: absolute;
-    top: -20px;
+    top: -46px;
     left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
+    transform: translateX(-50%) rotate(0deg);
     width: 200px;
     height: 80px;
-    background: url('../img/tape3.svg') 16 no-repeat center/contain;
+    background: url('../img/tape3.svg') no-repeat center/contain;
     z-index: 10;
 }
 
-.section-03 .inner .title img {}
+.section-03 .inner .title img {
+    width: 120px;
+}
 
 .section-03 .inner .title h2 {}
 
@@ -468,12 +677,14 @@ section .title {
 .sketch_wrapper {
     position: relative;
     margin: 0 auto;
+    max-width: 1200px;
 }
 
-.sketch_wrapper .notebook-bg {
+.sketch_wrapper .notebook-bg img {
+    display: block;
     width: 100%;
+    height: auto;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .sketch_wrapper .title {
@@ -485,26 +696,54 @@ section .title {
     font-size: 24px;
 }
 
-
 #drawingPad {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    cursor: crosshair;
 }
 
 .toolbar {
-    margin-top: 20px;
+    margin-top: 16px;
     text-align: center;
 }
 
-button {
-    padding: 10px 20px;
-    margin: 0 5px;
-    border-radius: 8px;
-    border: none;
+.toolbar button {
+    padding: 8px 12px;
+    margin: 0 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.toolbar button.color-btn {
+    border-color: transparent;
+}
+
+.toolbar button.color-btn[data-color="#156bd8"] {
     background-color: #156bd8;
     color: #fff;
-    cursor: pointer;
+}
+
+.toolbar button.color-btn[data-color="#FF689B"] {
+    background-color: #FF689B;
+    color: #fff;
+}
+
+.toolbar button.color-btn[data-color="#121212"] {
+    background-color: #121212;
+    color: #fff;
+}
+
+#eraserBtn {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+#eraserBtn.active {
+    background-color: #ddd;
 }
