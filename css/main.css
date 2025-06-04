@@ -1,827 +1,859 @@
-@charset "utf-8";
-@import url('reset.css');
-
-@font-face {
-    font-family: 'Lemon Bird';
-    src: url('LemonBird-Regular.woff2') format('woff2'),
-        url('LemonBird-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Patrick Hand';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url(https://fonts.gstatic.com/s/patrickhand/v23/LDI1apSQOAYtSuYWp8ZhfYe8XsLL.woff2) format('woff2');
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-    font-family: 'Ownglyph_ryurue-Rg';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-2@1.0/Ownglyph_ryurue-Rg.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* Scrollbar */
-*::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-*::-webkit-scrollbar-track {
-    background: #F3F3F3;
-    border-radius: 4px;
-}
-
-*::-webkit-scrollbar-thumb {
-    background-color: #156bd8;
-    border-radius: 4px;
-    border: 2px solid #F3F3F3;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-    background-color: #0f52a5;
-}
-
-*::-webkit-scrollbar-corner {
-    background-color: transparent;
-}
-
-
-body {
-    font-family: 'Lemon Bird';
-    background-color: #F3F3F3;
-    cursor: url('../img/mouse.svg') 18 18, auto;
-    overflow: hidden;
-}
-
-body:active {
-    cursor: url('../img/click.svg') 16 16, auto;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: url('../img/paper1.png') no-repeat center top, cover;
-    z-index: -1;
-}
-
-::selection {
-    background-color: none;
-    /* #156BD8  */
-    color: #FF689B;
-    height: 2px;
-}
-
-a,
-a:hover,
-a:focus,
-a:active {
-    cursor: url('../img/pointer.svg') 16 16, auto;
-}
-
-button,
-button:hover,
-button:focus,
-button:active {
-    cursor: url('../img/pointer.svg') 16 16, auto;
-}
-
-
-h2 {
-    font-size: 32px;
-}
-
-strong {
-    font-family: "Patrick Hand";
-    font-size: 28px;
-}
-
-p {
-    font-family: 'Ownglyph_ryurue-Rg';
-    font-size: 24px;
-    line-height: 36px;
-    word-break: keep-all;
-}
-
-b {
-    font-family: "Patrick Hand";
-    font-size: 32px;
-}
-
-.page-container {
-    perspective: 1500px;
-    perspective-origin: center center;
-}
-
-
-/* landing */
-.landing {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: url('../img/paper1.png') no-repeat center center / cover;
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    /* 3D 뒤집기 매끄럽게 하기 위한 설정 */
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
-    transform-origin: top center;
-    transform: rotateX(0deg);
-    transition: transform 2s ease-in-out;
-}
-
-.landing.hide {
-    transform: rotateX(90deg);
-}
-
-.landing.hide~.page .top {
-    display: block;
-}
-
-.landing_svg-1,
-.landing_svg-2 {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60%;
-    height: 100%;
-    max-width: 600px;
-}
-
-.landing_svg-2 {
-    width: 80%;
-    max-width: 800px;
-}
-
-.landing_svg-2 path {
-    stroke-width: 3 !important;
-}
-
-.landing_svg-1.active,
-.landing_svg-2.active {
-    display: block;
-}
-
-.page.hidden {
-    display: none;
-}
-
-/* page */
-.header {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-    /* 높게 띄워서 인트로보다 위에 보이게 */
-    background: url('../img/paper.png') no-repeat center bottom / cover;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.header .inner {
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 8px 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: url('../img/paper.png') center center no-repeat / cover;
-}
-
-.header .inner .logo {
-    user-select: none;
-    -webkit-user-drag: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    pointer-events: auto;
-}
-
-.header .inner .logo img {
-    width: 80px;
-}
-
-.header .inner .nav .gnb {
-    display: flex;
-    gap: 120px;
-}
-
-.header .inner .nav .gnb li a {
-    font-size: 32px;
-}
-
-.header .inner .nav .gnb li:hover a {
-    color: #156bd8;
-    transition: 0.7;
-}
-
-/* intro 🎀 */
-.intro {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: url('../img/paper1.png') no-repeat center center / cover;
-
-    overflow: visible;
-    position: relative;
-}
-
-.intro .inner {
-    position: relative;
-    text-align: center;
-    width: 100%;
-    max-width: 1440px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.intro .title {
-    position: relative;
-    z-index: 2;
-
-    display: inline-flex;
-    margin-bottom: 40px;
-}
-
-.intro .title img {
-    width: 120px;
-    height: auto;
-    user-select: none;
-    pointer-events: none;
-}
-
-.intro .path {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 1192px;
-    margin: 0 auto;
-    z-index: 1;
-    pointer-events: none;
-}
-
-.border-path {
-    width: 100%px;
-    height: auto;
-    display: block;
-}
-
-.intro .text {
-    position: absolute;
-    top: -18%;
-    left: 27%;
-    transform: translateX(-80%) rotate(-10deg);
-    z-index: 3;
-    color: #121212;
-    user-select: none;
-    pointer-events: none;
-    max-width: 1114px;
-}
-
-.intro .text p {
-    font-family: 'Lemon Bird' !important;
-    font-size: 120px;
-}
-
-.intro .icon-1 {
-    position: absolute;
-    top: 40%;
-    right: 7%;
-    width: 90px;
-    height: auto;
-    z-index: 3;
-    opacity: 0.9;
-    user-select: none;
-    pointer-events: none;
-}
-
-.intro .icon-2 {
-    position: absolute;
-    top: -8%;
-    left: 8%;
-    width: 120px;
-    height: auto;
-    z-index: 3;
-    opacity: 0.9;
-    user-select: none;
-    pointer-events: none;
-}
-
-.main {
-    padding-top: 120px;
-}
-
-/* section 🔻 */
-.section {
-    margin-top: 120px;
-}
-
-.section .inner {
-    max-width: 1440px;
-    width: calc(100% - 32px);
-    margin: 0 auto;
-}
-
-section .title {
-    font-size: 40px;
-}
-
-/* section-01 1️⃣ */
-.section-01 {}
-
-.section-01 .inner {
-    position: relative;
-}
-
-.section-01 .inner .title {
-    height: 200px;
-    position: relative;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    display: inline-flex;
-    align-items: center;
-    padding: 60px 80px;
-    margin-bottom: 60px;
-    gap: 40px;
-
-    background-color: #fff;
-    box-shadow: 2px 4px 8px #999999b4;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-
-.section-01 .inner .title::after {
-    content: "";
-    position: absolute;
-    top: -42px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
-    width: 200px;
-    height: 80px;
-    background: url('../img/tape1.svg') no-repeat center/contain;
-    z-index: 10;
-}
-
-.section-01 .inner .title img {
-    width: 120px;
-}
-
-.section-01 .inner .cont {
-    display: flex;
-    align-items: flex-start;
-    gap: 200px;
-}
-
-.section-01 .inner .me {
-    text-align: center;
-}
-
-
-.section-01 .inner .me .image {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.section-01 .inner .me .image b {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.section-01 .inner .me .text {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.section-01 .inner .sec01Swiper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 80px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-slide {
-    width: 400px !important;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-slide:nth-child(2) {
-    width: 300px !important;
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide img {
-    height: 120px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide:active strong{
-    
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .design,
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .tech {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .design img,
-.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .tech img {
-    width: 60px;
-    height: 60px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-button-next,
-.section-01 .inner .sec01Swiper .swiper-button-prev {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
-
-    bottom: 10px;
-    top: auto;
-}
-
-.section-01 .inner .sec01Swiper .swiper-button-next {
-    right: 10px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-button-prev {
-    right: 20px;
-}
-
-.swiper-button-next::after,
-.swiper-button-prev::after {
-    display: none !important;
-}
-
-.section-01 .inner .sec01Swiper .swiper-button-next::before {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 40px;
-    background: url('../img/next.svg') no-repeat center center;
-    background-size: contain;
-}
-
-.section-01 .inner .sec01Swiper .swiper-button-prev::before {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 40px;
-    background: url('../img/prev.svg') no-repeat center center;
-    background-size: contain;
-}
-
-.section-01 .inner .sec01Swiper .swiper-button-next:hover::before,
-.section-01 .inner .sec01Swiper .swiper-button-prev:hover::before {
-    border-left-color: #156BD8;
-    border-right-color: #156BD8;
-    transform: scale(1.1);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-/* section-02 2️⃣ */
-.section-02 {}
-
-.section-02 .inner {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
-}
-
-.section-02 .inner .title {
-    height: 200px;
-    position: relative;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    display: inline-flex;
-    align-items: center;
-    padding: 60px 80px;
-    margin-bottom: 60px;
-    gap: 40px;
-
-    background-color: #fff;
-    box-shadow: 2px 4px 8px #999999b4;
-    border-radius: 12px;
-}
-
-.section-02 .inner .title::after {
-    content: "";
-    position: absolute;
-    top: -42px;
-    left: 50%;
-    transform: translateX(-50%) rotate(0deg);
-    width: 200px;
-    height: 80px;
-    background: url('../img/tape2.svg') no-repeat center/contain;
-    z-index: 10;
-}
-
-.section-02 .inner .title img {
-    width: 120px;
-}
-
-.section-02 .inner .title h2 {}
-
-.section-02 .inner .category-tab {}
-
-.section-02 .inner .item_wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 80px;
-}
-
-.section-02 .inner .item_wrap .item {}
-
-.section-02 .inner .item_wrap .item .image {}
-
-.section-02 .inner .item_wrap .item .image img {}
-
-.section-02 .inner .item_wrap .item .image .first-web {}
-
-.section-02 .inner .item_wrap .item .image .second-mobile {}
-
-.section-02 .inner .item_wrap .item.text {}
-
-.section-02 .inner .item_wrap .item.text h3 {}
-
-.section-02 .inner .item_wrap .item.text p {}
-
-.section-02 .inner .item_wrap .item.text strong {}
-
-.section-02 .inner .item_wrap .item .link {}
-
-.section-02 .inner .item_wrap .item .link a {}
-
-/* section-03 3️⃣ */
-.section-03 {}
-
-.section-03 .inner {
-    position: relative;
-}
-
-.section-03 .inner .title {
-    height: 200px;
-    position: relative;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    display: inline-flex;
-    align-items: center;
-    padding: 60px 80px;
-    margin-bottom: 60px;
-    gap: 40px;
-
-    background-color: #fff;
-    box-shadow: 2px 4px 8px #999999b4;
-    border-radius: 12px;
-}
-
-.section-03 .inner .title::after {
-    content: "";
-    position: absolute;
-    top: -46px;
-    left: 50%;
-    transform: translateX(-50%) rotate(0deg);
-    width: 200px;
-    height: 80px;
-    background: url('../img/tape3.svg') no-repeat center/contain;
-    z-index: 10;
-}
-
-.section-03 .inner .title img {
-    width: 120px;
-}
-
-.section-03 .inner .title h2 {}
-
-.section-03 .inner .cont {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    margin: 0 auto;
-}
-
-.section-03 .inner .cont .phone {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-}
-
-.section-03 .inner .cont .phone img {
-    width: 80px;
-}
-
-.section-03 .inner .cont .email {
-    display: flex;
-    align-items: center;
-    gap: 80px;
-}
-
-.section-03 .inner .cont .email img {
-    width: 80px;
-}
-
-.section-03 .inner .pdf_button
-
-/* sketch_wrapper 🖍 */
-.sketch_wrapper {
-    position: relative;
-    margin: 0 auto;
-    max-width: 1200px;
-}
-
-.sketch_wrapper .notebook-bg img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
-.sketch_wrapper .title {
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    display: flex;
-    align-items: center;
-    font-size: 24px;
-}
-
-#drawingPad {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: url('../img/brush.svg') 14 14, auto;;
-}
-
-.toolbar {
-    margin-top: 16px;
-    text-align: center;
-}
-
-.toolbar button {
-    padding: 8px 12px;
-    margin: 0 6px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-
-    font-family: 'Lemon Bird';
-}
-
-/* .toolbar button:hover {} */
-
-.toolbar button.color-btn {
-    border-color: transparent;
-    color: #fff;
-}
-
-.toolbar button.color-btn[data-color="#156bd8"] {
-    background-color: #156bd8;
-}
-
-.toolbar button.color-btn[data-color="#FF689B"] {
-    background-color: #FF689B;
-}
-
-.toolbar button.color-btn[data-color="#121212"] {
-    background-color: #121212;
-}
-
-#eraserBtn {
-    background-color: #f0f0f0;
-    color: #333;
-}
-
-#eraserBtn.active {
-    background-color: #ddd;
-}
-
-.brush-label {
-    margin-left: 12px;
-    margin-right: 6px;
-    font-size: 14px;
-    vertical-align: middle;
-}
-
-#brushSizeRange {
-    vertical-align: middle;
-    width: 120px;
-    height: 4px;
-    margin: 0 6px;
-    cursor: pointer;
-}
-
-/* paper-slide */
-.paper-slide {
-    width: 100%;
-}
-
-.paper-slide .swiper-wrapper {}
-
-.paper-slide .swiper-wrapper .swiper-slide {
-    width: 425px;
-
-    position: relative;
-}
-
-.paper-slide .swiper-wrapper .swiper-slide img {
-    width: 100%;
-    object-fit: contain;
-}
-
-.paper-slide .swiper-wrapper .swiper-slide p {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Lemon Bird' !important;
-    font-size: 50px;
-}
-
-/* footer */
-.footer {
-    background-color: #F3F3F3;
-}
-
-.footer p {
-    font-size: 20px;
-    text-align: center;
-}
-
-/* top-btn */
-.top {
-    position: fixed;
-    width: 60px;
-    right: 80px;
-    bottom: 80px;
-    cursor: url('../img/mouse.svg') 18 18, auto;
-    background-color: transparent;
-    z-index: 99999;
-
-    display: none;
-}
-
-.top img {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.top:active {
-    cursor: url('../img/click.svg') 16 16, auto;
-}
-
-.top:active img {
-    scale: 0.9;
-}
-
-button.top {
-    bottom: 80px;
-}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YEJI's PORTFOLIO</title>
+    <link rel="icon" href="img/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src="lib/jquery-3.7.1.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        $(function () {
+            //탑버튼
+            let topBtn = document.querySelector('.top')//.top
+            topBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                })
+            });
+
+            //랜딩페이지
+            const landingSVGS = $('.landing_svg-1, .landing_svg-2').toArray();
+            let currentIndex = 0;
+
+            // SVG 내부 path의 dash 설정
+            function initPaths(svg) {
+                const paths = $(svg).find('path').toArray();
+                paths.forEach(path => {
+                    const len = path.getTotalLength();
+                    path.style.strokeDasharray = len;
+                    path.style.strokeDashoffset = len;
+                });
+                return paths;
+            }
+
+            // 경로를 그리는 애니메이션
+            function drawPaths(paths) {
+                return paths.reduce((prev, path, idx) => {
+                    return prev.then(() => {
+                        const len = path.getTotalLength();
+                        const isSecondSVG = (currentIndex === 1);
+                        // 첫 번째 SVG: duration 400ms
+                        // 두 번째 SVG: 마지막 두 경로는 800ms, 나머지는 300ms
+                        let duration = 400;
+                        if (isSecondSVG) {
+                            if (idx >= paths.length - 2) {
+                                duration = 800;
+                            } else {
+                                duration = 300;
+                            }
+                        }
+                        return path
+                            .animate(
+                                [{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+                                { duration: duration, easing: 'ease-in-out', fill: 'forwards' }
+                            )
+                            .finished;
+                    });
+                }, Promise.resolve());
+            }
+
+            function erasePaths(paths) {
+                const rev = paths.slice().reverse();
+                return rev.reduce((prev, path) => {
+                    return prev.then(() => {
+                        const len = path.getTotalLength();
+                        // 지우기 애니메이션은 모두 300ms
+                        return path
+                            .animate(
+                                [{ strokeDashoffset: 0 }, { strokeDashoffset: len }],
+                                { duration: 300, easing: 'ease-in-out', fill: 'forwards' }
+                            )
+                            .finished;
+                    });
+                }, Promise.resolve());
+            }
+
+            function animateLanding() {
+                // ① 모든 SVG에서 active 제거
+                landingSVGS.forEach(svg => $(svg).removeClass('active'));
+
+                // ② 현재 인덱스 SVG에만 active 추가 → CSS에서 display:block 적용됨
+                const svgEl = landingSVGS[currentIndex];
+                $(svgEl).addClass('active');
+
+                // ③ SVG 경로 그리기 → 0.8초 대기 → 조건 분기
+                const paths = initPaths(svgEl);
+                drawPaths(paths)
+                    .then(() => new Promise(res => setTimeout(res, 800)))
+                    .then(() => {
+                        if (currentIndex === 1) {
+                            // 두 번째 SVG일 경우 → 3초 뒤 오버레이 슬라이드 아웃
+                            setTimeout(() => {
+                                $('.landing').addClass('hide');
+                                $('.page').removeClass('hidden');
+                            }, 2000);
+                        } else {
+                            // 첫 번째 SVG일 경우 → erase 애니메이션 후 currentIndex 증가, 재귀 호출
+                            return erasePaths(paths)
+                                .then(() => new Promise(res => setTimeout(res, 500)))
+                                .then(() => {
+                                    currentIndex += 1;
+                                    animateLanding();
+                                });
+                        }
+                    })
+                    .catch(err => {
+                        console.error('애니메이션 중 오류:', err);
+                    });
+            }
+
+            // 초기 애니메이션 실행
+            animateLanding();
+
+            // ────────────────────────────────────────────────────────────────
+            // 2) 랜딩을 클릭하면 즉시 스케치북 넘기듯 위로 슬라이드 아웃
+            // ────────────────────────────────────────────────────────────────
+            $('.landing').on('click', () => {
+                $('.landing').addClass('hide');
+                $('.page').removeClass('hidden');
+
+            });
+
+            // ────────────────────────────────────────────────────────────────
+            // 3) 랜딩 슬라이드 아웃 완료 시점 (transitionend) → 메인 활성화
+            // ────────────────────────────────────────────────────────────────
+            $('.landing')[0].addEventListener('transitionend', (e) => {
+                if (
+                    e.propertyName === 'transform' &&        // transform 애니메이션이 끝날 때
+                    $('.landing').hasClass('hide')           // hide 클래스가 붙어 있다면
+                ) {
+                    // ① 랜딩을 화면에서 완전히 제거
+                    $('.landing').css('display', 'none');
+                    // ② body 스크롤 다시 허용
+                    $('body').css('overflow', 'auto');
+                }
+            });
+
+            //섹션1 슬라이드
+            var swiper = new Swiper(".sec01Swiper", {
+                slidesPerView: 2,
+                spaceBetween: 90,
+                /* pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                    type: "progressbar",
+                }, */
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
+
+            //섹션2 카테고리
+            $(document).ready(function () {
+                $('.category-tab').on('click', '.tab', function () {
+                    $('.category-tab .tab-active').removeClass('tab-active');
+                    $(this).addClass('tab-active');
+
+                    const filter = $(this).data('filter');
+                    if (filter === 'all') {
+                        $('.item').show();
+                    } else {
+                        $('.item').hide();
+                        $(`.item[data-type="${filter}"]`).show();
+                    }
+                });
+            });
+
+            // toastbox
+            function showToast(message) {
+                const toast = document.createElement('div');
+                toast.innerText = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '50px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.background = '#156bd8';
+                toast.style.color = '#fff';
+                toast.style.padding = '12px 24px';
+                toast.style.borderRadius = '20px';
+                toast.style.fontSize = '20px';
+                toast.style.letterSpacing = '2px';
+                toast.style.fontFamily = 'Ownglyph_ryurue-Rg';
+                toast.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+                toast.style.zIndex = 9999;
+                toast.style.transition = 'opacity 0.5s';
+                toast.style.opacity = '1';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 500);
+                }, 2000);
+            }
+
+            $('p[data-copy], .copy').on('click', function () {
+                let textToCopy;
+
+                if ($(this).is('p[data-copy]')) {
+                    textToCopy = $(this).data('copy');
+                }
+
+                else if ($(this).hasClass('copy')) {
+                    textToCopy = $(this).siblings('p[data-copy]').data('copy');
+                }
+
+                if (textToCopy) {
+                    navigator.clipboard.writeText(textToCopy)
+                        .then(() => {
+                            showToast('복사 완료!😉');
+                        })
+                        .catch(err => {
+                            showToast('복사 실패 😢');
+                        });
+                }
+            });
+
+            //drawing pad
+            var paperImg = document.getElementById('paperImage');
+            var canvas = document.getElementById('drawingPad');
+            var ctx = canvas.getContext('2d');
+            var maskCanvas = document.createElement('canvas');
+            var maskCtx = maskCanvas.getContext('2d');
+            var maskImageData = null;
+            var drawing = false;
+            var brushColor = '#156bd8';
+            var brushSize = 5;
+
+            function resizeCanvas() {
+                var imgW = paperImg.width;
+                var imgH = paperImg.height;
+                canvas.width = imgW;
+                canvas.height = imgH;
+                maskCanvas.width = imgW;
+                maskCanvas.height = imgH;
+                maskCtx.clearRect(0, 0, imgW, imgH);
+                maskCtx.drawImage(paperImg, 0, 0, imgW, imgH);
+                maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
+                ctx.clearRect(0, 0, imgW, imgH);
+            }
+
+            if (paperImg.complete) {
+                resizeCanvas();
+            } else {
+                paperImg.addEventListener('load', resizeCanvas);
+            }
+            window.addEventListener('resize', resizeCanvas);
+
+            function isOverPaper(x, y) {
+                if (!maskImageData) return false;
+                var width = maskCanvas.width;
+                var idx = (y * width + x) * 4;
+                return maskImageData[idx + 3] > 0;
+            }
+
+            canvas.addEventListener('mousedown', function (e) {
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(e.clientX - rect.left);
+                var y = Math.floor(e.clientY - rect.top);
+                if (!isOverPaper(x, y)) {
+                    drawing = false;
+                    return;
+                }
+                drawing = true;
+                ctx.beginPath();
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = brushColor;
+                ctx.moveTo(x, y);
+            });
+            canvas.addEventListener('mousemove', function (e) {
+                if (!drawing) return;
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(e.clientX - rect.left);
+                var y = Math.floor(e.clientY - rect.top);
+                if (!isOverPaper(x, y)) {
+                    drawing = false;
+                    ctx.closePath();
+                    return;
+                }
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            });
+            document.addEventListener('mouseup', function () {
+                if (drawing) {
+                    drawing = false;
+                    ctx.closePath();
+                }
+            });
+
+            canvas.addEventListener('touchstart', function (e) {
+                var touch = e.touches[0];
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(touch.clientX - rect.left);
+                var y = Math.floor(touch.clientY - rect.top);
+                if (!isOverPaper(x, y)) return;
+                drawing = true;
+                ctx.beginPath();
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = brushColor;
+                ctx.moveTo(x, y);
+                e.preventDefault();
+            });
+            canvas.addEventListener('touchmove', function (e) {
+                if (!drawing) return;
+                var touch = e.touches[0];
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(touch.clientX - rect.left);
+                var y = Math.floor(touch.clientY - rect.top);
+                if (!isOverPaper(x, y)) {
+                    drawing = false;
+                    ctx.closePath();
+                    return;
+                }
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                e.preventDefault();
+            });
+            document.addEventListener('touchend', function () {
+                if (drawing) {
+                    drawing = false;
+                    ctx.closePath();
+                }
+            });
+
+            //paper slide
+            var isFlipped = false;
+
+            var swiper = new Swiper('.paper-slide', {
+                loop: true,
+                centeredSlides: true,
+                autoplay: {
+                    delay: 0,
+                    disableOnInteraction: false
+                },
+                speed: 2500,
+                breakpoints: {
+                    320: { slidesPerView: 1.2, spaceBetween: 16 },
+                    768: { slidesPerView: 2.5, spaceBetween: 24 },
+                    1024: { slidesPerView: 3.2, spaceBetween: 32 },
+                    1440: { slidesPerView: 4.2, spaceBetween: 40 }
+                },
+                on: {
+                    init: function () {
+                        applyStaticTilt(false);
+                    },
+                    slideChangeTransitionStart: function () {
+                        isFlipped = !isFlipped;
+                        $('.paper-slide .swiper-slide img').removeClass('tilt-left tilt-right');
+                        applyStaticTilt(isFlipped);
+                    }
+                }
+            });
+
+            function applyStaticTilt(flipFlag) {
+                $('.paper-slide .swiper-slide img').each(function () {
+                    var idx = parseInt($(this).parent().attr('data-swiper-slide-index'), 10);
+                    if (idx % 2 === 0) {
+                        if (flipFlag) {
+                            $(this).addClass('tilt-right');
+                        } else {
+                            $(this).addClass('tilt-left');
+                        }
+                    } else {
+                        if (flipFlag) {
+                            $(this).addClass('tilt-left');
+                        } else {
+                            $(this).addClass('tilt-right');
+                        }
+                    }
+                });
+            }
+        });
+        //script end
+
+
+    </script>
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="landing">
+            <!-- ✨ 첫 번째 문장 SVG -->
+            <svg class="landing_svg-1" viewBox="0 0 182 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M1.18182 25.5C-0.0181837 17.9 5.01515 15 7.68182 14.5C12.1817 15 15.1819 17.5 15.1819 25.5C15.1819 31.9 10.8486 33.8333 8.68188 34C6.68186 34.3333 2.38182 33.1 1.18182 25.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M22.6819 1.5L23.4319 18.25M24.1819 35L23.4319 18.25M23.4319 18.25C25.6819 15.1667 31.1819 10.85 35.1819 18.25C36.6819 21 36.6819 31.5 35.1819 35"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M45.1819 31.5C45.0152 33.6667 44.2819 38.2 42.6819 39" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M64.6819 1L65.4319 18.5M66.1819 36L65.4319 18.5M65.4319 18.5C68.0152 15.3333 74.1819 11.1 78.1819 19.5C78.6819 22 79.6819 31 77.6819 35.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M86.6819 24C90.3486 24 97.3819 22.5 96.1819 16.5C94.1819 14 88.1819 13 85.6819 19C83.1819 25 86.1819 42.5 99.1819 29"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M105.182 1.5C104.682 11.1667 104.282 31 106.682 33C109.082 35 111.682 32.5 112.682 31"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M114.682 1.5C113.849 13.5 113.382 36.9 118.182 34.5C120.582 33.3 121.849 31 122.182 30"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M127.182 25.5C125.182 18.3 130.682 15.1666 133.682 14.5C135.682 14.1666 139.882 15.5 140.682 23.5C141.482 31.5 136.349 33.8333 133.682 34C132.349 34.1666 129.182 32.7 127.182 25.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M157.182 24H172.682" stroke="#121212" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+
+            <!-- ✨ 두 번째 문장 SVG -->
+            <svg class="landing_svg-2" viewBox="0 0 403 123" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M44 7.5C44.6667 16.6667 45.6 35.7 44 38.5" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M56 1C55.8333 3.5 55.1 8.8 53.5 10" stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M65 17.5C65.6667 24.3333 66.8 38.1 66 38.5C65 39 64.5 4.50001 78 22C79 25 78 33 78 37.5C76.6667 30.8333 76.3 17.5 85.5 17.5C91 17.5 93 29.5 91 38.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M109 6.5L117.5 21.5M117.5 21.5L126.5 7.5M117.5 21.5V39" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M149.5 8H133.5V38C133.5 38 141.728 38 147 38M132 20H147" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M165.5 6C166.833 17.3333 168.205 37.5 161.5 37.5C154.5 37.5 154.166 31.3333 154.5 29.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M176 7.5V38" stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M187.5 4C187.5 11 187.5 25.2 187.5 26" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M187.5 33.5C186.833 34.1667 186 35.7 188 36.5C190.5 37.5 189 32 187.5 33.5Z" stroke="black" />
+                <path
+                    d="M23.5002 74.5C23.4369 78.5471 23.5657 84.1297 23.7497 89.5M23.7497 89.5C24.0509 98.2839 24.5002 106.5 24.5002 106.5L23.7497 89.5ZM23.7497 89.5L39 90M39 74.5C39.5 84.8333 40 105.6 38 106"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M58.5682 87C54.7348 85 45.9 83.4 45.5 95C45 109.5 54.5 106 57 101.5C59 97.9 58.8333 88.3333 58.5 84L59 106"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M66 84V89M66 122V100.5M66 89C69.5 85.3333 77.3 80.7 80.5 91.5C83.7 102.3 75.8333 104.667 71.5 104.5C70 104 66.8 102.5 66 100.5M66 89V100.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M87 84V88.5M87 121.5V101M87 88.5C90.3333 85.5 97.8 81.5 101 89.5C105 99.5 98 107 91.5 104C89.5 103.2 87.6667 101.667 87 101M87 88.5V101"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M107 84L116 104.5M122.5 84.5L112 120.5" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path d="M138.5 85H155M146 71C146 81.8333 146.4 104 148 106" stroke="#121212" stroke-width="2"
+                    stroke-linecap="round" />
+                <path
+                    d="M158.5 97.5C156.1 89.9 161 86 165 85C169 85 170.5 86.5 171.5 94C172.3 100 168.833 103.5 167 104.5C165.167 105.333 160.9 105.1 158.5 97.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M211 88C208 85.8333 201.4 82.9 199 88.5C198.5 92.5 199.5 94.5 206 95C212.5 95.5 209.5 103 208.5 103.5C208.5 103.5 205.5 106 198 103"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M217.5 94.5C220 95 225.4 95.2 227 92C229 88 228 85.5 221.5 85.5C215 85.5 216 96.5 217.5 99.5C219 102.5 221.5 110 232 99.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M237.5 95C241.5 94.8333 249.1 93.4 247.5 89C245.9 84.6 241.167 85.8333 239 87C236.833 89 233.8 95.1 239 103.5C241.5 106.5 246.5 105.5 251 100"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M267.5 84.5L277 106M283 84L272 122" stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M289.5 97.5C288.7 89.5 293.5 86.1666 296 85.5C297.134 85.1975 300.9 84.9 302.5 92.5C304.1 100.1 300.167 103.667 298 104.5C295.5 105.5 290.3 105.5 289.5 97.5Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M310 84C309.167 92.1667 309.4 107.7 317 104.5C320.2 102.9 321.667 100.167 322 99V85C321.667 92.1667 321.6 106.5 324 106.5"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+                <path d="M47.5 48L324 52L2 53.5L321.5 58" stroke="#156BD8" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path
+                    d="M374 77.5L369.5 90M383.5 78.5L379.5 89M363.5 92.5C364.5 102.167 371.3 116.3 390.5 95.5M385.5 67C377.333 65.6667 359.9 65.4 355.5 75C350 87 344 92.5 350.5 107.5C355.7 119.5 376.333 120.167 386 119C391.167 118 401.4 111.5 401 93.5C401 78.5 399.5 72.5 385.5 67Z"
+                    stroke="#121212" stroke-width="2" stroke-linecap="round" />
+            </svg>
+
+            <div class="page-flip-overlay"></div>
+        </div><!-- .landing end -->
+
+        <div class="page hidden">
+            <header class="header">
+                <div class="inner">
+                    <h1 class="logo">
+                        <a href="#"><img src="img/logo.svg" alt="logo"></a>
+                    </h1>
+                    <nav class="nav">
+                        <ul class="gnb">
+                            <li><a href="#">About Me</a></li>
+                            <li><a href="#">Work</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul><!-- .gnb end -->
+                    </nav><!-- .nav end -->
+                </div><!-- .inner end -->
+            </header><!-- .header -->
+
+            <div class="intro">
+                <div class="inner">
+                    <div class="title">
+                        <img src="img/p.png" alt="letter P">
+                        <img src="img/O-1.png" alt="letter O-1">
+                        <img src="img/R.png" alt="letter R">
+                        <img src="img/T.png" alt="letter T">
+                        <img src="img/F.png" alt="letter F">
+                        <img src="img/O-2.png" alt="letter O-2">
+                        <img src="img/L.png" alt="letter L">
+                        <img src="img/I.png" alt="letter I">
+                        <img src="img/O_3.png" alt="letter O-3">
+                    </div><!-- .title end -->
+
+                    <div class="path">
+                        <svg class="border-path" viewBox="0 0 1232 462" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M20.1781 203.083C40.8884 142.113 178.124 38.9007 587.656 20.5938C941.492 4.77655 1587.3 309.359 926.538 410.255M926.538 410.255C840.589 423.379 734.433 435.531 604.964 439.5C-364.654 469.228 83.6179 65.5 513.5 65.5C972.515 65.5 1447.5 254.5 926.538 410.255Z"
+                                stroke="#156BD8" stroke-width="40" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg><!-- .border-path end -->
+                    </div>
+
+                    <div class="text">
+                        <p>yeji's</p>
+                    </div><!-- .text end -->
+
+                    <img src="img/sparkle.svg" alt="intro_icon-1" class="icon-1">
+                    <img src="img/sparkle-2.svg" alt="intro_icon-2" class="icon-2">
+
+                </div><!-- .inner end -->
+
+
+            </div><!-- .intro end -->
+
+            <div class="main">
+                <section class="section section-01">
+                    <div class="inner">
+                        <div class="title">
+                            <img src="img/about_me.svg" alt="about_me_icon">
+                            <h2>ABOUT ME</h2>
+                        </div><!-- title end -->
+
+                        <div class="cont">
+                            <div class="me">
+                                <div class="image">
+                                    <img src="img/section1.svg" alt="me_icon">
+                                    <b>ME</b>
+                                </div><!-- .image end -->
+
+                                <div class="text">
+                                    <div class="name">
+                                        <strong>Name</strong>
+                                        <P>성예지</P>
+                                    </div><!-- .name end -->
+                                    <div class="birth">
+                                        <strong>Date of Birth</strong>
+                                        <P>1997.07.06</P>
+                                    </div><!-- .birth end -->
+                                </div><!-- .text end -->
+                            </div><!-- .me end -->
+
+                            <!-- Swiper -->
+                            <div class="swiper sec01Swiper">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <img src="img/section1-1.svg" alt="education_icon">
+                                        <strong class="sub-title">Education</strong>
+                                        <div class="p_wrap">
+                                            <p>2025 [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
+                                            <p>2022 기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
+                                            <p>2021.08 동아대학교 중국학과 졸업</p>
+                                            <p>2016.02 부흥고등학교 졸업</p>
+                                        </div><!-- p_wrap end -->
+                                    </div><!-- swiper-slide -->
+
+                                    <div class="swiper-slide">
+                                        <img src="img/section1-2.svg" alt="certificates_icon">
+                                        <strong class="sub-title">Certificates</strong>
+                                        <div class="p_wrap">
+                                            <P>2023 컴퓨터그래픽스운용기능사</P>
+                                            <P>2022 컴퓨터활용능력 2급</P>
+                                            <P>2021 자동차운전면허 2종보통</P>
+                                        </div><!-- p_wrap end -->
+                                    </div><!-- swiper-slide -->
+
+                                    <div class="swiper-slide">
+                                        <img src="img/section1-3.svg" alt="work_experience_icon">
+                                        <strong class="sub-title">Work Experience</strong>
+                                        <div class="p_wrap">
+                                            <p>2023.01 ~2024.12 레몬하우스 인테리어 마케팅팀</p>
+                                        </div><!-- p_wrap end -->
+                                    </div><!-- swiper-slide -->
+
+                                    <div class="swiper-slide">
+                                        <img src="img/section1-4.svg" alt="skill_icon">
+                                        <strong class="sub-title">Skills</strong>
+                                        <div class="p_wrap">
+                                            <div class="design">
+                                                <img src="img/ps.svg" alt="photoshop_icon">
+                                                <img src="img/ai.svg" alt="illustrator_icon">
+                                                <img src="img/lr.svg" alt="lightroom_icon">
+                                                <img src="img/figma.svg" alt="figma">
+                                            </div><!-- .design end -->
+                                            <div class="tech">
+                                                <img src="img/html.svg" alt="html_icon">
+                                                <img src="img/css.svg" alt="css_icon">
+                                                <img src="img/js.svg" alt="javascript_icon">
+                                                <img src="img/jq.svg" alt="jquery_icon">
+                                            </div><!-- .tech end -->
+                                        </div><!-- p_wrap end -->
+                                    </div><!-- swiper-slide -->
+                                </div><!-- swiper-wrapper -->
+                                <div class="swiper-nav">
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                </div><!-- .swiper-wrapper end -->
+                            </div><!-- sec01Swiper -->
+
+                            <div class="slider-overlay"></div>
+                        </div><!-- .cont end -->
+                    </div><!-- .inner end -->
+                </section><!-- .section-01 end -->
+
+                <section class="section section-02">
+                    <div class="inner">
+                        <div class="title">
+                            <img src="img/work.svg" alt="work_icon">
+                            <h2>WORK</h2>
+                        </div><!-- title end -->
+
+                        <div class="category-tab">
+                            <button class="tab-active" data-filter="all">All</button>
+                            <button class="tab" data-filter="Web">Web</button>
+                            <button class="tab" data-filter="Mobile">Mobile</button>
+                        </div><!-- .category-tab end -->
+
+                        <div class="item_wrap">
+                            <div class="item" data-type="web mobile">
+                                <div class="image">
+                                    <img src="img/neez-web.png" alt="neez-web" class="first-web">
+                                    <img src="img/neez-mobile.png" alt="neez-mobile" class="second-mobile">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>NEEZ 모작 (반응형)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
+                                </div><!-- text -->
+                            </div><!-- .item end -->
+
+                            <div class="item" data-type="web mobile">
+                                <div class="image">
+                                    <img src="img/오늘의집-web.png" alt="오늘의집-web" class="first-web">
+                                    <img src="img/오늘의집-mobile.png" alt="오늘의집-mobile" class="second-mobile">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>오늘의집 리디자인 (반응형)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
+                                </div><!-- text -->
+                            </div><!-- .item end -->
+
+                            <div class="item" data-type="web mobile">
+                                <div class="image">
+                                    <img src="img/오복식품-web.png" alt="오복식품-web" class="first-web">
+                                    <img src="img/오복식품-mobile.png" alt="오복식품-mobile" class="second-mobile">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>오복식품 리디자인 (반응형)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
+                                </div><!-- text -->
+                            </div><!-- .item end -->
+
+                            <div class="item" data-type="mobile">
+                                <div class="image only-mobile">
+                                    <img src="img/아몬즈-mobile.png" alt="아몬즈-mobile" class="only-mobile01">
+                                    <img src="img/아몬즈-mobile1.png" alt="아몬즈-mobile1" class="only-mobile02">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>아몬즈 리디자인 (모바일)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
+                                </div><!-- text -->
+                            </div><!-- .item end -->
+
+                            <div class="item" data-type="web">
+                                <div class="image">
+                                    <img src="img/구찌오스테리아.png" alt="구찌오스테리아-web" class="only-web01">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>구찌오스테리아 서울 리디자인 (웹)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
+                                </div><!-- text -->
+                            </div><!-- .item end -->
+                        </div><!-- .item_wrap end -->
+
+                        <div class="category-tab">
+                            <button data-filter="GRAPHIC DESIGN">GRAPHIC DESIGN</button>
+                        </div>
+                        <div class="item_wrap">
+                            <div class="item">
+
+                            </div><!-- .item end -->
+                        </div><!-- .item_wrap end -->
+                    </div><!-- .inner end -->
+                </section><!-- .section-02 end -->
+
+                <section class="section section-03">
+                    <div class="inner">
+                        <div class="title">
+                            <img src="img/contact.svg" alt="contact_icon">
+                            <h2>CONTACT</h2>
+                        </div><!-- title end -->
+
+                        <div class="cont">
+                            <div class="phone">
+                                <img src="img/section3-1.svg" alt="phone_icon" class="main-img">
+                                <strong>phone</strong>
+                                <p class="copy-text" data-copy="010-2869-8466">010-2869-8466</p>
+                                <img src="img/copy.svg" alt="copy_icon" class="copy" data-copy="010-2869-8466">
+                            </div><!-- .phone end -->
+
+                            <div class="email">
+                                <img src="img/section3-2.svg" alt="e-mail_icon" class="main-img">
+                                <strong>e-mail</strong>
+                                <p class="copy-text" data-copy="syeji7766@gmail.com">syeji7766@gmail.com</p>
+                                <img src="img/copy.svg" alt="copy_icon" class="copy" data-copy="010-2869-8466">
+                            </div><!-- .email end -->
+                        </div><!-- .cont end -->
+
+                        <button type="button" class="pdf_button">
+                            <div class="open">
+                                <img src="img/button.svg" alt="open_pdf">
+                                <a href="#">open &nbsp; pdf</a>
+                            </div>
+
+                            <div class="hover">
+                                <img src="img/button_click.svg" alt="hover_button">
+                                <a href="#">let’s &nbsp; work &nbsp; together</a>
+                            </div>
+                        </button>
+
+                    </div><!-- .inner end -->
+                </section><!-- .section-03 end -->
+            </div><!-- .main end -->
+
+            <div class="sketch_wrapper">
+                <div class="inner">
+                    <div class="notebook-bg">
+                        <img id="paperImage" src="img/sketch.png" alt="sketch_notebook_image">
+                    </div>
+                    <canvas id="drawingPad"></canvas>
+                </div>
+            </div><!-- sketch_wrapper end -->
+
+            <div class="swiper paper-slide">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="img/TORN1.png" alt="torn-paper_slide-1">
+                        <p>#html</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN2.png" alt="torn-paper_slide-2">
+                        <p>#css</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN3.png" alt="torn-paper_slide-3">
+                        <p>#web design</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN4.png" alt="torn-paper_slide-4">
+                        <p>#javascript</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN5.png" alt="torn-paper_slide-5">
+                        <p>#UI/UX</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN6.png" alt="torn-paper_slide-6">
+                        <p>#FIGMA</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN7.png" alt="torn-paper_slide-7">
+                        <p>#GRAPHIC DESIGN</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN1.png" alt="torn-paper_slide-1">
+                        <p>#marketing</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN2.png" alt="torn-paper_slide-2">
+                        <p>#idea</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN3.png" alt="torn-paper_slide-3">
+                        <p>#create</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN4.png" alt="torn-paper_slide-4">
+                        <p>#fun & friendly</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN5.png" alt="torn-paper_slide-5">
+                        <p>#positive</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN6.png" alt="torn-paper_slide-6">
+                        <p>#simple</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN7.png" alt="torn-paper_slide-7">
+                        <p>#growth</p>
+                    </div><!-- .swiper-slide end -->
+                </div><!-- swiper-wrapper -->
+            </div><!-- paper-slide -->
+
+            <footer class="footer">
+                <div class="inner">
+                    <p>※ 본 사이트는 상업적 목적이 아닌 개인 포트폴리오 사이트로 제작되었습니다. <br>
+                        일부 내용 및 폰트, 이미지 등은 그 출처가 따로 있음을 밝힙니다.</p>
+                </div><!-- .inner end -->
+            </footer>
+
+            <button type="button" class="top">
+                <img src="img/top_btn.svg" alt="top_btn">
+            </button><!-- top end -->
+        </div><!-- .page end -->
+    </div><!-- .page-container end -->
+
+
+</body>
+
+</html>
