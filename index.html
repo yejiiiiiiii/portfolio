@@ -64,7 +64,6 @@
                 }, Promise.resolve());
             }
 
-            // 첫 번째 SVG만 지우고, 두 번째 SVG는 지우기 없이 넘어갑니다.
             function erasePaths(paths) {
                 const rev = paths.slice().reverse();
                 return rev.reduce((prev, path) => {
@@ -98,6 +97,7 @@
                             // 두 번째 SVG일 경우 → 3초 뒤 오버레이 슬라이드 아웃
                             setTimeout(() => {
                                 $('.landing').addClass('hide');
+                                $('.page').removeClass('hidden');
                             }, 2000);
                         } else {
                             // 첫 번째 SVG일 경우 → erase 애니메이션 후 currentIndex 증가, 재귀 호출
@@ -122,6 +122,8 @@
             // ────────────────────────────────────────────────────────────────
             $('.landing').on('click', () => {
                 $('.landing').addClass('hide');
+                $('.page').removeClass('hidden');
+
             });
 
             // ────────────────────────────────────────────────────────────────
@@ -182,9 +184,9 @@
                 toast.style.bottom = '50px';
                 toast.style.left = '50%';
                 toast.style.transform = 'translateX(-50%)';
-                toast.style.background = '#fff';
-                toast.style.color = '#156bd8';
-                toast.style.border = '1px solid #121212';
+                toast.style.background = '#156bd8';
+                toast.style.color = '#fff';
+                //toast.style.border = '1px solid #121212';
                 toast.style.padding = '12px 24px';
                 toast.style.borderRadius = '20px';
                 toast.style.fontSize = '20px';
@@ -218,34 +220,47 @@
             var $notebookImg = $('.notebook-bg img');
             var $colorBtns = $('.color-btn');
             var $eraserBtn = $('#eraserBtn');
+            var $textBtn = $('#textBtn');
+            var $brushSlider = $('#brushSizeRange');
+            var $iconBtns = $('.icon-btn');
+            var $clearBtn = $('#clearBtn');
 
             // **Offscreen 캔버스**: 노트 이미지 투명도(pix) 읽을 용도
             var maskCanvas = document.createElement('canvas');
             var maskCtx = maskCanvas.getContext('2d');
-            var maskImageData = null; // 이후에 픽셀 정보를 담을 변수
+            var maskImageData = null;
 
-            // 상태값
             var drawing = false;
-            var currentColor = '#156bd8'; // 기본 브러시 색
-            var brushSize = 5;         // 브러시 두께
+            var currentColor = '#156bd8';
+            var brushSize = parseInt($brushSlider.val(), 10) || 5;
             var isEraser = false;
+            var isTextMode = false;
+            var isIconMode = false;
+            var currentIconSrc = null;
+            var draggingIcon = null;
+            var ghostIcon = null;
 
             // 화면에 보이는 캔버스 크기를 노트 이미지 크기에 맞추는 함수
             function resizeCanvas() {
                 var imgW = $notebookImg.width();
                 var imgH = $notebookImg.height();
+
                 // ① 화면에 보이는 캔버스(실제로 그리는 곳)
                 canvas.width = imgW;
                 canvas.height = imgH;
+
                 // ② offscreen(mask) 캔버스: 동일한 크기로 생성
                 maskCanvas.width = imgW;
                 maskCanvas.height = imgH;
-                // ③ 노트 이미지를 offscreen에 그려서 픽셀 정보 추출
-                maskCtx.clearRect(0, 0, imgW, imgH);
-                maskCtx.drawImage($notebookImg[0], 0, 0, imgW, imgH);
+                maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
+
                 // 전체 픽셀 정보(단 한번만 읽어 두면 빠르기 때문에 보관)
                 maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
                 // ④ (원한다면) 기존 캔버스도 완전히 클리어
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                maskCtx.clearRect(0, 0, imgW, imgH);
+                maskCtx.drawImage($notebookImg[0], 0, 0, imgW, imgH);
+                maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
 
@@ -255,21 +270,17 @@
             } else {
                 $notebookImg.on('load', resizeCanvas);
             }
-            // 윈도우가 리사이즈될 때도 다시 재조정
+
             $(window).on('resize', resizeCanvas);
 
-            // “x, y가 실제 노트 이미지 불투명 영역(종이 위)인지” 확인하는 함수
+
             function isOverPaper(x, y) {
-                // maskImageData는 Uint8ClampedArray([...]) 형태로 되어 있고,
-                // 한 픽셀은 RGBA 4바이트(0~255)로 저장됩니다.
-                // 인덱스 계산법: index = 4 * (y * width + x)
+                if (!maskImageData) return false;
                 var width = maskCanvas.width;
                 var idx = (y * width + x) * 4;
-                // alpha 값만 보면 됩니다. (maskImageData[idx+3])
-                // alpha가 0이면 완전히 투명(종이 밖), >0이면 종이 위
+                // alpha 채널(픽셀 투명도) 확인: 값 > 0이면 종이 영역
                 return maskImageData[idx + 3] > 0;
             }
-
             // ───────────────────────────────────────────────────────────────
             // 마우스 이벤트로 그리기 (오직 종이 영역 안에서만)
             // ───────────────────────────────────────────────────────────────
@@ -279,7 +290,10 @@
                 var y = Math.floor(e.pageY - offset.top);
 
                 // 투명 영역(종이 바깥)이면 작업 중단
-                if (!isOverPaper(x, y)) return;
+                if (!isOverPaper(x, y)) {
+                    drawing = false;
+                    return;
+                }
 
                 drawing = true;
                 ctx.beginPath();
@@ -295,7 +309,6 @@
                 var x = Math.floor(e.pageX - offset.left);
                 var y = Math.floor(e.pageY - offset.top);
 
-                //만약 종이 영역이 아니면 자동으로 마우스 떼기 처리
                 if (!isOverPaper(x, y)) {
                     drawing = false;
                     ctx.closePath();
@@ -306,7 +319,6 @@
                 ctx.stroke();
             });
 
-            // 마우스 떼면 언제나 그리기 중지
             $(document).on('mouseup', function () {
                 if (drawing) {
                     drawing = false;
@@ -315,7 +327,7 @@
             });
 
             // ───────────────────────────────────────────────────────────────
-            // 터치 이벤트 지원 (모바일), 같은 로직
+            // 터치 이벤트 지원 (모바일)
             // ───────────────────────────────────────────────────────────────
             $canvas.on('touchstart', function (e) {
                 var touch = e.originalEvent.touches[0];
@@ -331,7 +343,6 @@
                 ctx.lineCap = 'round';
                 ctx.strokeStyle = isEraser ? '#fff8f0' : currentColor;
                 ctx.moveTo(x, y);
-
                 e.preventDefault();
             });
 
@@ -365,13 +376,17 @@
             // ───────────────────────────────────────────────────────────────
             $colorBtns.on('click', function () {
                 isEraser = false;
+                isTextMode = false;
+                isIconMode = false;
                 $eraserBtn.removeClass('active');
+                $textBtn.removeClass('active');
+                $iconBtns.removeClass('selected');
                 $colorBtns.removeClass('active');
                 $(this).addClass('active');
                 currentColor = $(this).data('color');
-                brushSize = 5;
+                brushSize = parseInt($brushSlider.val(), 10) || 5;
             });
-            // 기본 색상 파랑 버튼 활성화
+
             $('.color-btn[data-color="#156bd8"]').addClass('active');
 
             // ───────────────────────────────────────────────────────────────
@@ -379,9 +394,118 @@
             // ───────────────────────────────────────────────────────────────
             $eraserBtn.on('click', function () {
                 isEraser = true;
-                brushSize = 20;
+                isTextMode = false;
+                isIconMode = false;
                 $eraserBtn.addClass('active');
+                $textBtn.removeClass('active');
+                $iconBtns.removeClass('selected');
                 $colorBtns.removeClass('active');
+                brushSize = 20;
+            });
+
+            // ───────────────────────────────────────────────────────────────
+            // 브러시 두께 슬라이더 변경 → brushSize 업데이트
+            // ───────────────────────────────────────────────────────────────
+            $brushSlider.on('input change', function () {
+                brushSize = parseInt($(this).val(), 10) || 5;
+            });
+
+            // ───────────────────────────────────────────────────────────────
+            // 아이콘 드래그 로직: ghost 생성, 드래그·드롭 시 캔버스에 그리기
+            // ───────────────────────────────────────────────────────────────
+            $iconBtns.on('mousedown', function (e) {
+                e.preventDefault();
+                isIconMode = false;
+                isEraser = false;
+                isTextMode = false;
+                $eraserBtn.removeClass('active');
+                $textBtn.removeClass('active');
+                $colorBtns.removeClass('active');
+                $iconBtns.removeClass('selected');
+
+                draggingIcon = $(this);
+                currentIconSrc = draggingIcon.data('icon-src');
+
+                // ghost 아이콘 생성
+                ghostIcon = $('<img>')
+                    .attr('src', currentIconSrc)
+                    .css({
+                        position: 'absolute',
+                        width: '40px',
+                        height: '40px',
+                        pointerEvents: 'none',
+                        opacity: 0.7,
+                        zIndex: 9999
+                    })
+                    .appendTo('body');
+
+                ghostIcon.css({
+                    left: e.pageX - 20 + 'px',
+                    top: e.pageY - 20 + 'px'
+                });
+
+                draggingIcon.addClass('selected');
+            });
+
+            $(document).on('mousemove', function (e) {
+                if (draggingIcon && ghostIcon) {
+                    ghostIcon.css({
+                        left: e.pageX - 20 + 'px',
+                        top: e.pageY - 20 + 'px'
+                    });
+                }
+            });
+
+            $(document).on('mouseup', function (e) {
+                if (draggingIcon && ghostIcon) {
+                    var offset = $canvas.offset();
+                    var x = Math.floor(e.pageX - offset.left);
+                    var y = Math.floor(e.pageY - offset.top);
+
+                    if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height && isOverPaper(x, y)) {
+                        var img = new Image();
+                        img.src = currentIconSrc;
+                        img.onload = function () {
+                            var iconW = 40, iconH = 40;
+                            ctx.drawImage(img, x - iconW / 2, y - iconH / 2, iconW, iconH);
+                        };
+                    }
+
+                    draggingIcon.removeClass('selected');
+                    ghostIcon.remove();
+                    draggingIcon = null;
+                    ghostIcon = null;
+                    currentIconSrc = null;
+                }
+            });
+
+            // ───────────────────────────────────────────────────────────────
+            // 11) 초기화 버튼 클릭 시 캔버스 초기화
+            // ───────────────────────────────────────────────────────────────
+            $clearBtn.on('click', function () {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                resizeCanvas();
+                isEraser = false;
+                isTextMode = false;
+                isIconMode = false;
+                currentIconSrc = null;
+                $eraserBtn.removeClass('active');
+                $textBtn.removeClass('active');
+                $iconBtns.removeClass('selected');
+                $colorBtns.removeClass('active');
+                $('.color-btn[data-color="#156bd8"]').addClass('active');
+            });
+
+            //paper slide
+            var swiper = new Swiper(".paper-slide", {
+                slidesPerView: 4.2,
+                spaceBetween: 400,
+                centeredSlides: true,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+
             });
         });//script end
 
@@ -482,7 +606,7 @@
             <div class="page-flip-overlay"></div>
         </div><!-- .landing end -->
 
-        <div class="page">
+        <div class="page hidden">
             <header class="header">
                 <div class="inner">
                     <h1 class="logo">
@@ -498,24 +622,18 @@
                 </div><!-- .inner end -->
             </header><!-- .header -->
 
-            <button type="button" class="top">
-                <img src="img/top_btn.svg" alt="top_btn">
-            </button><!-- top end -->
-
-
-
             <div class="intro">
                 <div class="inner">
                     <div class="title">
-                        <img src="img/p.svg" alt="letter P">
-                        <img src="img/O-1.svg" alt="letter O-1">
-                        <img src="img/R.svg" alt="letter R">
-                        <img src="img/T.svg" alt="letter T">
-                        <img src="img/F.svg" alt="letter F">
-                        <img src="img/O-2.svg" alt="letter O-2">
-                        <img src="img/L.svg" alt="letter L">
-                        <img src="img/I.svg" alt="letter I">
-                        <img src="img/O_3.svg" alt="letter O-3">
+                        <img src="img/p.png" alt="letter P">
+                        <img src="img/O-1.png" alt="letter O-1">
+                        <img src="img/R.png" alt="letter R">
+                        <img src="img/T.png" alt="letter T">
+                        <img src="img/F.png" alt="letter F">
+                        <img src="img/O-2.png" alt="letter O-2">
+                        <img src="img/L.png" alt="letter L">
+                        <img src="img/I.png" alt="letter I">
+                        <img src="img/O_3.png" alt="letter O-3">
                     </div><!-- .title end -->
 
                     <div class="path">
@@ -627,7 +745,6 @@
                 </section><!-- .section-01 end -->
 
                 <section class="section section-02">
-                    <!-- ✨✨✨title 메모지 형태로 제작 + 마스킹 테이프 ::after로 위치시키기 + 안에 넣을 프로젝트 목업 만들기-->
                     <div class="inner">
                         <div class="title">
                             <img src="img/work.svg" alt="work_icon">
@@ -641,17 +758,96 @@
                         </div><!-- .category-tab end -->
 
                         <div class="item_wrap">
-                            <div class="item" data-type="web">
+                            <div class="item" data-type="web mobile">
+                                <div class="image">
+                                    <img src="img/neez-web.png" alt="neez-web" class="first-web">
+                                    <img src="img/neez-mobile.png" alt="neez-mobile" class="second-mobile">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>NEEZ 사이트 모작 (반응형)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                </div><!-- text -->
+                                <div class="link">
+                                    <a href="#">(바로가기)</a>
+                                </div><!-- .link end -->
+                            </div><!-- .item end -->
 
+                            <div class="item" data-type="web mobile">
+                                <div class="image">
+                                    <img src="img/오늘의집-web.png" alt="오늘의집-web" class="first-web">
+                                    <img src="img/오늘의집-mobile.png" alt="오늘의집-mobile" class="second-mobile">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>오늘의집 리디자인 (반응형)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                </div><!-- text -->
+                                <div class="link">
+                                    <a href="#">(바로가기)</a>
+                                </div><!-- .link end -->
+                            </div><!-- .item end -->
+
+                            <div class="item" data-type="web mobile">
+                                <div class="image">
+                                    <img src="img/오복식품-web.png" alt="오복식품-web" class="first-web">
+                                    <img src="img/오복식품-mobile.png" alt="오복식품-mobile" class="second-mobile">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>오복식품 리디자인 (반응형)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                </div><!-- text -->
+                                <div class="link">
+                                    <a href="#">(바로가기)</a>
+                                </div><!-- .link end -->
+                            </div><!-- .item end -->
+
+                            <div class="item" data-type="mobile">
+                                <div class="image">
+                                    <img src="img/아몬즈-mobile.png" alt="아몬즈-mobile" class="only-mobile01">
+                                    <img src="img/아몬즈-mobile1.png" alt="아몬즈-mobile1" class="only-mobile02">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>아몬즈 리디자인 (모바일)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                </div><!-- text -->
+                                <div class="link">
+                                    <a href="#">(바로가기)</a>
+                                </div><!-- .link end -->
+                            </div><!-- .item end -->
+
+                            <div class="item" data-type="web">
+                                <div class="image">
+                                    <img src="img/구찌오스테리아.png" alt="구찌오스테리아-web" class="only-web01">
+                                </div><!-- .image end -->
+                                <div class="text">
+                                    <h3>구찌오스테리아 서울 리디자인 (웹)</h3>
+                                    <p>과제 설명</p>
+                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
+                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                </div><!-- text -->
+                                <div class="link">
+                                    <a href="#">(바로가기)</a>
+                                </div><!-- .link end -->
                             </div><!-- .item end -->
                         </div><!-- .item_wrap end -->
 
-                        <!-- ✨✨✨washi tape (tape2.svg) ::after 로 추가 -->
+                        <h2>GRAPHIC DESIGN</h2>
+                        <div class="item_wrap">
+                            <div class="item">
+
+                            </div><!-- .item end -->
+                        </div><!-- .item_wrap end -->
                     </div><!-- .inner end -->
                 </section><!-- .section-02 end -->
 
                 <section class="section section-03">
-                    <!-- ✨✨✨title 메모지 형태로 제작 + 마스킹 테이프 ::after로 위치시키기 + 토스트 박스 테두리 브러쉬 효과 추가하는 법 알아보기-->
                     <div class="inner">
                         <div class="title">
                             <img src="img/contact.svg" alt="contact_icon">
@@ -672,14 +868,17 @@
                                 <p class="copy-text" data-copy="syeji7766@gmail.com">syeji7766@gmail.com</p>
                             </div><!-- .email end -->
                         </div><!-- .cont end -->
+
+                        <button type="button" class="pdf_button">
+                            <img src="img/button.svg" alt="open_pdf">
+                            <a href="#">open pdf</a>
+                        </button>
+                        
                     </div><!-- .inner end -->
                 </section><!-- .section-03 end -->
             </div><!-- .main end -->
 
-            <button type="button" class="pdf_button">
-                <img src="img/button.svg" alt="open_pdf">
-                <a href="#">open pdf</a>
-            </button>
+
 
             <div class="sketch_wrapper">
                 <div class="inner">
@@ -690,15 +889,92 @@
                     <canvas id="drawingPad"></canvas>
 
                     <div class="toolbar">
-                        <button data-color="#156bd8" class="color-btn">파랑</button>
-                        <button data-color="#FF689B" class="color-btn">핑크</button>
-                        <button data-color="#121212" class="color-btn">검정</button>
-                        <button id="eraserBtn">지우개</button>
+                        <button data-color="#156bd8" class="color-btn">blue</button>
+                        <button data-color="#FF689B" class="color-btn">pink</button>
+                        <button data-color="#121212" class="color-btn">black</button>
+                        <button id="eraserBtn">eraser</button>
+
+                        <!-- <button id="textBtn">텍스트</button> -->
+
+                        <label for="brushSizeRange" class="brush-label">두께</label>
+                        <input type="range" id="brushSizeRange" min="1" max="50" value="5">
                     </div><!-- toolbar end -->
                 </div><!-- .inner end -->
             </div><!-- .sketch_wrapper end -->
+
+            <div class="swiper paper-slide">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="img/TORN1.png" alt="torn-paper_slide-1">
+                        <p>#html</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN2.png" alt="torn-paper_slide-2">
+                        <p>#css</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN3.png" alt="torn-paper_slide-3">
+                        <p>#web design</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN4.png" alt="torn-paper_slide-4">
+                        <p>#javascript</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN5.png" alt="torn-paper_slide-5">
+                        <p>#UI/UX</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN6.png" alt="torn-paper_slide-6">
+                        <p>#FIGMA</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN7.png" alt="torn-paper_slide-7">
+                        <p>#GRAPHIC DESIGN</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN1.png" alt="torn-paper_slide-1">
+                        <p>#marketing</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN2.png" alt="torn-paper_slide-2">
+                        <p>#idea</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN3.png" alt="torn-paper_slide-3">
+                        <p>#create</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN4.png" alt="torn-paper_slide-4">
+                        <p>#fun & friendly</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN5.png" alt="torn-paper_slide-5">
+                        <p>#positive</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN6.png" alt="torn-paper_slide-6">
+                        <p>#simple</p>
+                    </div><!-- .swiper-slide end -->
+                    <div class="swiper-slide">
+                        <img src="img/TORN7.png" alt="torn-paper_slide-7">
+                        <p>#growth</p>
+                    </div><!-- .swiper-slide end -->
+                </div><!-- swiper-wrapper -->
+            </div><!-- paper-slide -->
+
+            <footer class="footer">
+                <p>※ 본 사이트는 상업적 목적이 아닌 개인 포트폴리오 사이트로 제작되었습니다. <br>
+                    일부 내용 및 폰트, 이미지 등은 그 출처가 따로 있음을 밝힙니다.</p>
+            </footer>
+
+            <button type="button" class="top">
+                <img src="img/top_btn.svg" alt="top_btn">
+            </button><!-- top end -->
         </div><!-- .page end -->
     </div><!-- .page-container end -->
+
+
 </body>
 
 </html>

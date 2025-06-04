@@ -26,9 +26,7 @@
     font-style: normal;
 }
 
-/* ===== Scrollbar CSS ===== */
-/* ✨✨✨스크롤바 다시 다듬기 */
-/* Chrome, Edge, and Safari */
+/* Scrollbar */
 *::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -77,9 +75,9 @@ body::before {
 }
 
 ::selection {
-    background-color: #FF689B;
+    background-color: none;
     /* #156BD8  */
-    color: #fff;
+    color: #FF689B;
     height: 2px;
 }
 
@@ -180,6 +178,10 @@ b {
     display: block;
 }
 
+.page.hidden {
+    display: none;
+}
+
 /* page */
 .header {
     width: 100%;
@@ -195,7 +197,7 @@ b {
 .header .inner {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 16px 20px;
+    padding: 8px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -228,36 +230,6 @@ b {
     transition: 0.7;
 }
 
-.top {
-    width: 60px;
-    position: fixed;
-    right: 80px;
-    bottom: 80px;
-    cursor: url('../img/mouse.svg') 18 18, auto;
-    background-color: transparent;
-    z-index: 99999;
-
-    display: none;
-}
-
-.top img {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-.top:active {
-    cursor: url('../img/click.svg') 16 16, auto;
-}
-
-.top:active img {
-    scale: 0.9;
-}
-
-button.top {
-    bottom: 80px;
-}
-
 /* intro 🎀 */
 .intro {
     width: 100vw;
@@ -271,18 +243,6 @@ button.top {
     overflow: visible;
     position: relative;
 }
-
-/* .intro::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    background: url('../img/Paper2.png') no-repeat center top;
-    background-size: contain;
-    pointer-events: none;
-    z-index: 0;
-    top: 28%;
-    left: -12%;
-} */
 
 .intro .inner {
     position: relative;
@@ -434,7 +394,7 @@ section .title {
 .section-01 .inner .cont {
     display: flex;
     align-items: flex-start;
-    gap: 120px;
+    gap: 200px;
 }
 
 .section-01 .inner .me {
@@ -482,6 +442,10 @@ section .title {
     height: 120px;
 }
 
+.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide:active strong{
+    
+}
+
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap {
     display: flex;
     flex-direction: column;
@@ -509,20 +473,18 @@ section .title {
     background: none;
     border: none;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
+    z-index: 10;
 
-    bottom: -20px;
+    bottom: 10px;
+    top: auto;
 }
 
 .section-01 .inner .sec01Swiper .swiper-button-next {
-    right: 16px;
+    right: 10px;
 }
 
 .section-01 .inner .sec01Swiper .swiper-button-prev {
-    right: 64px;
+    right: 20px;
 }
 
 .swiper-button-next::after,
@@ -551,11 +513,8 @@ section .title {
 .section-01 .inner .sec01Swiper .swiper-button-next:hover::before,
 .section-01 .inner .sec01Swiper .swiper-button-prev:hover::before {
     border-left-color: #156BD8;
-    /* Next: border-left 색깔을 파란색으로 */
     border-right-color: #156BD8;
-    /* Prev: border-right 색깔을 파란색으로 */
     transform: scale(1.1);
-    /* 10% 정도 확대 */
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
@@ -564,6 +523,9 @@ section .title {
 
 .section-02 .inner {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
 }
 
 .section-02 .inner .title {
@@ -603,6 +565,34 @@ section .title {
 .section-02 .inner .title h2 {}
 
 .section-02 .inner .category-tab {}
+
+.section-02 .inner .item_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.section-02 .inner .item_wrap .item {}
+
+.section-02 .inner .item_wrap .item .image {}
+
+.section-02 .inner .item_wrap .item .image img {}
+
+.section-02 .inner .item_wrap .item .image .first-web {}
+
+.section-02 .inner .item_wrap .item .image .second-mobile {}
+
+.section-02 .inner .item_wrap .item.text {}
+
+.section-02 .inner .item_wrap .item.text h3 {}
+
+.section-02 .inner .item_wrap .item.text p {}
+
+.section-02 .inner .item_wrap .item.text strong {}
+
+.section-02 .inner .item_wrap .item .link {}
+
+.section-02 .inner .item_wrap .item .link a {}
 
 /* section-03 3️⃣ */
 .section-03 {}
@@ -650,13 +640,14 @@ section .title {
 .section-03 .inner .cont {
     display: flex;
     flex-direction: column;
-    gap: 80px;
+    gap: 40px;
+    margin: 0 auto;
 }
 
 .section-03 .inner .cont .phone {
     display: flex;
     align-items: center;
-    gap: 80px;
+    gap: 40px;
 }
 
 .section-03 .inner .cont .phone img {
@@ -672,6 +663,8 @@ section .title {
 .section-03 .inner .cont .email img {
     width: 80px;
 }
+
+.section-03 .inner .pdf_button
 
 /* sketch_wrapper 🖍 */
 .sketch_wrapper {
@@ -702,7 +695,7 @@ section .title {
     left: 0;
     width: 100%;
     height: 100%;
-    cursor: crosshair;
+    cursor: url('../img/brush.svg') 14 14, auto;;
 }
 
 .toolbar {
@@ -718,25 +711,27 @@ section .title {
     border-radius: 6px;
     font-size: 14px;
     cursor: pointer;
+
+    font-family: 'Lemon Bird';
 }
+
+/* .toolbar button:hover {} */
 
 .toolbar button.color-btn {
     border-color: transparent;
+    color: #fff;
 }
 
 .toolbar button.color-btn[data-color="#156bd8"] {
     background-color: #156bd8;
-    color: #fff;
 }
 
 .toolbar button.color-btn[data-color="#FF689B"] {
     background-color: #FF689B;
-    color: #fff;
 }
 
 .toolbar button.color-btn[data-color="#121212"] {
     background-color: #121212;
-    color: #fff;
 }
 
 #eraserBtn {
@@ -746,4 +741,87 @@ section .title {
 
 #eraserBtn.active {
     background-color: #ddd;
+}
+
+.brush-label {
+    margin-left: 12px;
+    margin-right: 6px;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+#brushSizeRange {
+    vertical-align: middle;
+    width: 120px;
+    height: 4px;
+    margin: 0 6px;
+    cursor: pointer;
+}
+
+/* paper-slide */
+.paper-slide {
+    width: 100%;
+}
+
+.paper-slide .swiper-wrapper {}
+
+.paper-slide .swiper-wrapper .swiper-slide {
+    width: 425px;
+
+    position: relative;
+}
+
+.paper-slide .swiper-wrapper .swiper-slide img {
+    width: 100%;
+    object-fit: contain;
+}
+
+.paper-slide .swiper-wrapper .swiper-slide p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Lemon Bird' !important;
+    font-size: 50px;
+}
+
+/* footer */
+.footer {
+    background-color: #F3F3F3;
+}
+
+.footer p {
+    font-size: 20px;
+    text-align: center;
+}
+
+/* top-btn */
+.top {
+    position: fixed;
+    width: 60px;
+    right: 80px;
+    bottom: 80px;
+    cursor: url('../img/mouse.svg') 18 18, auto;
+    background-color: transparent;
+    z-index: 99999;
+
+    display: none;
+}
+
+.top img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.top:active {
+    cursor: url('../img/click.svg') 16 16, auto;
+}
+
+.top:active img {
+    scale: 0.9;
+}
+
+button.top {
+    bottom: 80px;
 }
