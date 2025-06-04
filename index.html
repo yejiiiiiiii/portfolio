@@ -143,8 +143,8 @@
 
             //섹션1 슬라이드
             var swiper = new Swiper(".sec01Swiper", {
-                slidesPerView: 3,
-                spaceBetween: 120,
+                slidesPerView: 2,
+                spaceBetween: 90,
                 /* pagination: {
                     el: ".swiper-pagination",
                     clickable: true,
@@ -157,23 +157,19 @@
             });
 
             //섹션2 카테고리
-            $('.tab').click(function () {
-                const filter = $(this).data('filter');
+            $(document).ready(function () {
+                $('.category-tab').on('click', '.tab', function () {
+                    $('.category-tab .tab-active').removeClass('tab-active');
+                    $(this).addClass('tab-active');
 
-                // 1) 기존 활성 탭에서 클래스 제거
-                $('.tab').removeClass('tab-active');
-
-                // 2) 클릭된 탭에 tab-active 클래스 추가
-                $(this).addClass('tab-active');
-
-                // 3) 필터 값에 따라 아이템 표시/숨김
-                if (filter === 'all') {
-                    $('.item').show();
-                } else {
-                    $('.item').hide();
-                    // 반드시 백틱(``)을 써서 ${filter}를 실제 값으로 치환
-                    $(`.item[data-type="${filter}"]`).show();
-                }
+                    const filter = $(this).data('filter');
+                    if (filter === 'all') {
+                        $('.item').show();
+                    } else {
+                        $('.item').hide();
+                        $(`.item[data-type="${filter}"]`).show();
+                    }
+                });
             });
 
             // toastbox
@@ -186,7 +182,6 @@
                 toast.style.transform = 'translateX(-50%)';
                 toast.style.background = '#156bd8';
                 toast.style.color = '#fff';
-                //toast.style.border = '1px solid #121212';
                 toast.style.padding = '12px 24px';
                 toast.style.borderRadius = '20px';
                 toast.style.fontSize = '20px';
@@ -204,310 +199,186 @@
                 }, 2000);
             }
 
-            $('p[data-copy]').click(function () {
-                const text = $(this).data('copy');
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('복사 완료!😉');
-                }).catch(err => {
-                    showToast('복사 실패 😢');
-                });
+            $('p[data-copy], .copy').on('click', function () {
+                let textToCopy;
+
+                if ($(this).is('p[data-copy]')) {
+                    textToCopy = $(this).data('copy');
+                }
+
+                else if ($(this).hasClass('copy')) {
+                    textToCopy = $(this).siblings('p[data-copy]').data('copy');
+                }
+
+                if (textToCopy) {
+                    navigator.clipboard.writeText(textToCopy)
+                        .then(() => {
+                            showToast('복사 완료!😉');
+                        })
+                        .catch(err => {
+                            showToast('복사 실패 😢');
+                        });
+                }
             });
 
             //drawing pad
-            var $canvas = $('#drawingPad');
-            var canvas = $canvas[0];
+            var paperImg = document.getElementById('paperImage');
+            var canvas = document.getElementById('drawingPad');
             var ctx = canvas.getContext('2d');
-            var $notebookImg = $('.notebook-bg img');
-            var $colorBtns = $('.color-btn');
-            var $eraserBtn = $('#eraserBtn');
-            var $textBtn = $('#textBtn');
-            var $brushSlider = $('#brushSizeRange');
-            var $iconBtns = $('.icon-btn');
-            var $clearBtn = $('#clearBtn');
-
-            // **Offscreen 캔버스**: 노트 이미지 투명도(pix) 읽을 용도
             var maskCanvas = document.createElement('canvas');
             var maskCtx = maskCanvas.getContext('2d');
             var maskImageData = null;
-
             var drawing = false;
-            var currentColor = '#156bd8';
-            var brushSize = parseInt($brushSlider.val(), 10) || 5;
-            var isEraser = false;
-            var isTextMode = false;
-            var isIconMode = false;
-            var currentIconSrc = null;
-            var draggingIcon = null;
-            var ghostIcon = null;
+            var brushColor = '#156bd8';
+            var brushSize = 5;
 
-            // 화면에 보이는 캔버스 크기를 노트 이미지 크기에 맞추는 함수
             function resizeCanvas() {
-                var imgW = $notebookImg.width();
-                var imgH = $notebookImg.height();
-
-                // ① 화면에 보이는 캔버스(실제로 그리는 곳)
+                var imgW = paperImg.width;
+                var imgH = paperImg.height;
                 canvas.width = imgW;
                 canvas.height = imgH;
-
-                // ② offscreen(mask) 캔버스: 동일한 크기로 생성
                 maskCanvas.width = imgW;
                 maskCanvas.height = imgH;
-                maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
-
-                // 전체 픽셀 정보(단 한번만 읽어 두면 빠르기 때문에 보관)
-                maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
-                // ④ (원한다면) 기존 캔버스도 완전히 클리어
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 maskCtx.clearRect(0, 0, imgW, imgH);
-                maskCtx.drawImage($notebookImg[0], 0, 0, imgW, imgH);
+                maskCtx.drawImage(paperImg, 0, 0, imgW, imgH);
                 maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, imgW, imgH);
             }
 
-            // 노트 이미지가 로드된 직후, 또는 이미 로드된 상태라면 resizeCanvas() 실행
-            if ($notebookImg.prop('complete')) {
+            if (paperImg.complete) {
                 resizeCanvas();
             } else {
-                $notebookImg.on('load', resizeCanvas);
+                paperImg.addEventListener('load', resizeCanvas);
             }
-
-            $(window).on('resize', resizeCanvas);
-
+            window.addEventListener('resize', resizeCanvas);
 
             function isOverPaper(x, y) {
                 if (!maskImageData) return false;
                 var width = maskCanvas.width;
                 var idx = (y * width + x) * 4;
-                // alpha 채널(픽셀 투명도) 확인: 값 > 0이면 종이 영역
                 return maskImageData[idx + 3] > 0;
             }
-            // ───────────────────────────────────────────────────────────────
-            // 마우스 이벤트로 그리기 (오직 종이 영역 안에서만)
-            // ───────────────────────────────────────────────────────────────
-            $canvas.on('mousedown', function (e) {
-                var offset = $canvas.offset();
-                var x = Math.floor(e.pageX - offset.left);
-                var y = Math.floor(e.pageY - offset.top);
 
-                // 투명 영역(종이 바깥)이면 작업 중단
+            canvas.addEventListener('mousedown', function (e) {
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(e.clientX - rect.left);
+                var y = Math.floor(e.clientY - rect.top);
                 if (!isOverPaper(x, y)) {
                     drawing = false;
                     return;
                 }
-
                 drawing = true;
                 ctx.beginPath();
                 ctx.lineWidth = brushSize;
                 ctx.lineCap = 'round';
-                ctx.strokeStyle = isEraser ? '#fff8f0' : currentColor;
+                ctx.strokeStyle = brushColor;
                 ctx.moveTo(x, y);
             });
-
-            $canvas.on('mousemove', function (e) {
+            canvas.addEventListener('mousemove', function (e) {
                 if (!drawing) return;
-                var offset = $canvas.offset();
-                var x = Math.floor(e.pageX - offset.left);
-                var y = Math.floor(e.pageY - offset.top);
-
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(e.clientX - rect.left);
+                var y = Math.floor(e.clientY - rect.top);
                 if (!isOverPaper(x, y)) {
                     drawing = false;
                     ctx.closePath();
                     return;
                 }
-
                 ctx.lineTo(x, y);
                 ctx.stroke();
             });
-
-            $(document).on('mouseup', function () {
+            document.addEventListener('mouseup', function () {
                 if (drawing) {
                     drawing = false;
                     ctx.closePath();
                 }
             });
 
-            // ───────────────────────────────────────────────────────────────
-            // 터치 이벤트 지원 (모바일)
-            // ───────────────────────────────────────────────────────────────
-            $canvas.on('touchstart', function (e) {
-                var touch = e.originalEvent.touches[0];
-                var offset = $canvas.offset();
-                var x = Math.floor(touch.pageX - offset.left);
-                var y = Math.floor(touch.pageY - offset.top);
-
+            canvas.addEventListener('touchstart', function (e) {
+                var touch = e.touches[0];
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(touch.clientX - rect.left);
+                var y = Math.floor(touch.clientY - rect.top);
                 if (!isOverPaper(x, y)) return;
-
                 drawing = true;
                 ctx.beginPath();
                 ctx.lineWidth = brushSize;
                 ctx.lineCap = 'round';
-                ctx.strokeStyle = isEraser ? '#fff8f0' : currentColor;
+                ctx.strokeStyle = brushColor;
                 ctx.moveTo(x, y);
                 e.preventDefault();
             });
-
-            $canvas.on('touchmove', function (e) {
+            canvas.addEventListener('touchmove', function (e) {
                 if (!drawing) return;
-                var touch = e.originalEvent.touches[0];
-                var offset = $canvas.offset();
-                var x = Math.floor(touch.pageX - offset.left);
-                var y = Math.floor(touch.pageY - offset.top);
-
+                var touch = e.touches[0];
+                var rect = canvas.getBoundingClientRect();
+                var x = Math.floor(touch.clientX - rect.left);
+                var y = Math.floor(touch.clientY - rect.top);
                 if (!isOverPaper(x, y)) {
                     drawing = false;
                     ctx.closePath();
                     return;
                 }
-
                 ctx.lineTo(x, y);
                 ctx.stroke();
                 e.preventDefault();
             });
-
-            $(document).on('touchend', function () {
+            document.addEventListener('touchend', function () {
                 if (drawing) {
                     drawing = false;
                     ctx.closePath();
                 }
-            });
-
-            // ───────────────────────────────────────────────────────────────
-            // 색상 버튼 클릭: 종이 위에서는 그리기, 종이 밖에서는 무시
-            // ───────────────────────────────────────────────────────────────
-            $colorBtns.on('click', function () {
-                isEraser = false;
-                isTextMode = false;
-                isIconMode = false;
-                $eraserBtn.removeClass('active');
-                $textBtn.removeClass('active');
-                $iconBtns.removeClass('selected');
-                $colorBtns.removeClass('active');
-                $(this).addClass('active');
-                currentColor = $(this).data('color');
-                brushSize = parseInt($brushSlider.val(), 10) || 5;
-            });
-
-            $('.color-btn[data-color="#156bd8"]').addClass('active');
-
-            // ───────────────────────────────────────────────────────────────
-            // 지우개 버튼 클릭: 종이 위에서만 지우개(투명색)로 그리기
-            // ───────────────────────────────────────────────────────────────
-            $eraserBtn.on('click', function () {
-                isEraser = true;
-                isTextMode = false;
-                isIconMode = false;
-                $eraserBtn.addClass('active');
-                $textBtn.removeClass('active');
-                $iconBtns.removeClass('selected');
-                $colorBtns.removeClass('active');
-                brushSize = 20;
-            });
-
-            // ───────────────────────────────────────────────────────────────
-            // 브러시 두께 슬라이더 변경 → brushSize 업데이트
-            // ───────────────────────────────────────────────────────────────
-            $brushSlider.on('input change', function () {
-                brushSize = parseInt($(this).val(), 10) || 5;
-            });
-
-            // ───────────────────────────────────────────────────────────────
-            // 아이콘 드래그 로직: ghost 생성, 드래그·드롭 시 캔버스에 그리기
-            // ───────────────────────────────────────────────────────────────
-            $iconBtns.on('mousedown', function (e) {
-                e.preventDefault();
-                isIconMode = false;
-                isEraser = false;
-                isTextMode = false;
-                $eraserBtn.removeClass('active');
-                $textBtn.removeClass('active');
-                $colorBtns.removeClass('active');
-                $iconBtns.removeClass('selected');
-
-                draggingIcon = $(this);
-                currentIconSrc = draggingIcon.data('icon-src');
-
-                // ghost 아이콘 생성
-                ghostIcon = $('<img>')
-                    .attr('src', currentIconSrc)
-                    .css({
-                        position: 'absolute',
-                        width: '40px',
-                        height: '40px',
-                        pointerEvents: 'none',
-                        opacity: 0.7,
-                        zIndex: 9999
-                    })
-                    .appendTo('body');
-
-                ghostIcon.css({
-                    left: e.pageX - 20 + 'px',
-                    top: e.pageY - 20 + 'px'
-                });
-
-                draggingIcon.addClass('selected');
-            });
-
-            $(document).on('mousemove', function (e) {
-                if (draggingIcon && ghostIcon) {
-                    ghostIcon.css({
-                        left: e.pageX - 20 + 'px',
-                        top: e.pageY - 20 + 'px'
-                    });
-                }
-            });
-
-            $(document).on('mouseup', function (e) {
-                if (draggingIcon && ghostIcon) {
-                    var offset = $canvas.offset();
-                    var x = Math.floor(e.pageX - offset.left);
-                    var y = Math.floor(e.pageY - offset.top);
-
-                    if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height && isOverPaper(x, y)) {
-                        var img = new Image();
-                        img.src = currentIconSrc;
-                        img.onload = function () {
-                            var iconW = 40, iconH = 40;
-                            ctx.drawImage(img, x - iconW / 2, y - iconH / 2, iconW, iconH);
-                        };
-                    }
-
-                    draggingIcon.removeClass('selected');
-                    ghostIcon.remove();
-                    draggingIcon = null;
-                    ghostIcon = null;
-                    currentIconSrc = null;
-                }
-            });
-
-            // ───────────────────────────────────────────────────────────────
-            // 11) 초기화 버튼 클릭 시 캔버스 초기화
-            // ───────────────────────────────────────────────────────────────
-            $clearBtn.on('click', function () {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                resizeCanvas();
-                isEraser = false;
-                isTextMode = false;
-                isIconMode = false;
-                currentIconSrc = null;
-                $eraserBtn.removeClass('active');
-                $textBtn.removeClass('active');
-                $iconBtns.removeClass('selected');
-                $colorBtns.removeClass('active');
-                $('.color-btn[data-color="#156bd8"]').addClass('active');
             });
 
             //paper slide
-            var swiper = new Swiper(".paper-slide", {
-                slidesPerView: 4.2,
-                spaceBetween: 400,
+            var isFlipped = false;
+
+            var swiper = new Swiper('.paper-slide', {
+                loop: true,
                 centeredSlides: true,
                 autoplay: {
-                    delay: 2500,
-                    disableOnInteraction: false,
+                    delay: 0,
+                    disableOnInteraction: false
                 },
-
+                speed: 2500,
+                breakpoints: {
+                    320: { slidesPerView: 1.2, spaceBetween: 16 },
+                    768: { slidesPerView: 2.5, spaceBetween: 24 },
+                    1024: { slidesPerView: 3.2, spaceBetween: 32 },
+                    1440: { slidesPerView: 4.2, spaceBetween: 40 }
+                },
+                on: {
+                    init: function () {
+                        applyStaticTilt(false);
+                    },
+                    slideChangeTransitionStart: function () {
+                        isFlipped = !isFlipped;
+                        $('.paper-slide .swiper-slide img').removeClass('tilt-left tilt-right');
+                        applyStaticTilt(isFlipped);
+                    }
+                }
             });
-        });//script end
+
+            function applyStaticTilt(flipFlag) {
+                $('.paper-slide .swiper-slide img').each(function () {
+                    var idx = parseInt($(this).parent().attr('data-swiper-slide-index'), 10);
+                    if (idx % 2 === 0) {
+                        if (flipFlag) {
+                            $(this).addClass('tilt-right');
+                        } else {
+                            $(this).addClass('tilt-left');
+                        }
+                    } else {
+                        if (flipFlag) {
+                            $(this).addClass('tilt-left');
+                        } else {
+                            $(this).addClass('tilt-right');
+                        }
+                    }
+                });
+            }
+        });
+        //script end
 
 
     </script>
@@ -650,6 +521,7 @@
 
                     <img src="img/sparkle.svg" alt="intro_icon-1" class="icon-1">
                     <img src="img/sparkle-2.svg" alt="intro_icon-2" class="icon-2">
+
                 </div><!-- .inner end -->
 
 
@@ -677,7 +549,7 @@
                                     </div><!-- .name end -->
                                     <div class="birth">
                                         <strong>Date of Birth</strong>
-                                        <P>1997.0706</P>
+                                        <P>1997.07.06</P>
                                     </div><!-- .birth end -->
                                 </div><!-- .text end -->
                             </div><!-- .me end -->
@@ -732,14 +604,14 @@
                                             </div><!-- .tech end -->
                                         </div><!-- p_wrap end -->
                                     </div><!-- swiper-slide -->
-
-                                    <div class="swiper-slide"></div>
-                                    <div class="swiper-slide"></div>
-                                    <div class="swiper-slide"></div>
                                 </div><!-- swiper-wrapper -->
-                                <div class="swiper-button-next"></div>
-                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-nav">
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                </div><!-- .swiper-wrapper end -->
                             </div><!-- sec01Swiper -->
+
+                            <div class="slider-overlay"></div>
                         </div><!-- .cont end -->
                     </div><!-- .inner end -->
                 </section><!-- .section-01 end -->
@@ -764,14 +636,16 @@
                                     <img src="img/neez-mobile.png" alt="neez-mobile" class="second-mobile">
                                 </div><!-- .image end -->
                                 <div class="text">
-                                    <h3>NEEZ 사이트 모작 (반응형)</h3>
+                                    <h3>NEEZ 모작 (반응형)</h3>
                                     <p>과제 설명</p>
                                     <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
                                     <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
                                 </div><!-- text -->
-                                <div class="link">
-                                    <a href="#">(바로가기)</a>
-                                </div><!-- .link end -->
                             </div><!-- .item end -->
 
                             <div class="item" data-type="web mobile">
@@ -784,10 +658,12 @@
                                     <p>과제 설명</p>
                                     <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
                                     <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
                                 </div><!-- text -->
-                                <div class="link">
-                                    <a href="#">(바로가기)</a>
-                                </div><!-- .link end -->
                             </div><!-- .item end -->
 
                             <div class="item" data-type="web mobile">
@@ -800,14 +676,16 @@
                                     <p>과제 설명</p>
                                     <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
                                     <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
                                 </div><!-- text -->
-                                <div class="link">
-                                    <a href="#">(바로가기)</a>
-                                </div><!-- .link end -->
                             </div><!-- .item end -->
 
                             <div class="item" data-type="mobile">
-                                <div class="image">
+                                <div class="image only-mobile">
                                     <img src="img/아몬즈-mobile.png" alt="아몬즈-mobile" class="only-mobile01">
                                     <img src="img/아몬즈-mobile1.png" alt="아몬즈-mobile1" class="only-mobile02">
                                 </div><!-- .image end -->
@@ -816,10 +694,12 @@
                                     <p>과제 설명</p>
                                     <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
                                     <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
                                 </div><!-- text -->
-                                <div class="link">
-                                    <a href="#">(바로가기)</a>
-                                </div><!-- .link end -->
                             </div><!-- .item end -->
 
                             <div class="item" data-type="web">
@@ -831,14 +711,18 @@
                                     <p>과제 설명</p>
                                     <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
                                     <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+
+                                    <div class="link">
+                                        <a href="#">(바로가기)</a>
+                                    </div><!-- .link end -->
+
                                 </div><!-- text -->
-                                <div class="link">
-                                    <a href="#">(바로가기)</a>
-                                </div><!-- .link end -->
                             </div><!-- .item end -->
                         </div><!-- .item_wrap end -->
 
-                        <h2>GRAPHIC DESIGN</h2>
+                        <div class="category-tab">
+                            <button data-filter="GRAPHIC DESIGN">GRAPHIC DESIGN</button>
+                        </div>
                         <div class="item_wrap">
                             <div class="item">
 
@@ -853,54 +737,47 @@
                             <img src="img/contact.svg" alt="contact_icon">
                             <h2>CONTACT</h2>
                         </div><!-- title end -->
-                        <!--✨✨washi tape (tape3.svg) ::after 로 추가 -->
 
                         <div class="cont">
                             <div class="phone">
-                                <img src="img/section3-1.svg" alt="phone_icon">
+                                <img src="img/section3-1.svg" alt="phone_icon" class="main-img">
                                 <strong>phone</strong>
                                 <p class="copy-text" data-copy="010-2869-8466">010-2869-8466</p>
+                                <img src="img/copy.svg" alt="copy_icon" class="copy" data-copy="010-2869-8466">
                             </div><!-- .phone end -->
 
                             <div class="email">
-                                <img src="img/section3-2.svg" alt="e-mail_icon">
+                                <img src="img/section3-2.svg" alt="e-mail_icon" class="main-img">
                                 <strong>e-mail</strong>
                                 <p class="copy-text" data-copy="syeji7766@gmail.com">syeji7766@gmail.com</p>
+                                <img src="img/copy.svg" alt="copy_icon" class="copy" data-copy="010-2869-8466">
                             </div><!-- .email end -->
                         </div><!-- .cont end -->
 
                         <button type="button" class="pdf_button">
-                            <img src="img/button.svg" alt="open_pdf">
-                            <a href="#">open pdf</a>
+                            <div class="open">
+                                <img src="img/button.svg" alt="open_pdf">
+                                <a href="#">open &nbsp; pdf</a>
+                            </div>
+
+                            <div class="hover">
+                                <img src="img/button_click.svg" alt="hover_button">
+                                <a href="#">let’s &nbsp; work &nbsp; together</a>
+                            </div>
                         </button>
-                        
+
                     </div><!-- .inner end -->
                 </section><!-- .section-03 end -->
             </div><!-- .main end -->
 
-
-
             <div class="sketch_wrapper">
                 <div class="inner">
                     <div class="notebook-bg">
-                        <img src="img/sketch.png" alt="sketch_notebook_image">
-                    </div><!-- .notebook-bg end -->
-
+                        <img id="paperImage" src="img/sketch.png" alt="sketch_notebook_image">
+                    </div>
                     <canvas id="drawingPad"></canvas>
-
-                    <div class="toolbar">
-                        <button data-color="#156bd8" class="color-btn">blue</button>
-                        <button data-color="#FF689B" class="color-btn">pink</button>
-                        <button data-color="#121212" class="color-btn">black</button>
-                        <button id="eraserBtn">eraser</button>
-
-                        <!-- <button id="textBtn">텍스트</button> -->
-
-                        <label for="brushSizeRange" class="brush-label">두께</label>
-                        <input type="range" id="brushSizeRange" min="1" max="50" value="5">
-                    </div><!-- toolbar end -->
-                </div><!-- .inner end -->
-            </div><!-- .sketch_wrapper end -->
+                </div>
+            </div><!-- sketch_wrapper end -->
 
             <div class="swiper paper-slide">
                 <div class="swiper-wrapper">
@@ -964,8 +841,10 @@
             </div><!-- paper-slide -->
 
             <footer class="footer">
-                <p>※ 본 사이트는 상업적 목적이 아닌 개인 포트폴리오 사이트로 제작되었습니다. <br>
-                    일부 내용 및 폰트, 이미지 등은 그 출처가 따로 있음을 밝힙니다.</p>
+                <div class="inner">
+                    <p>※ 본 사이트는 상업적 목적이 아닌 개인 포트폴리오 사이트로 제작되었습니다. <br>
+                        일부 내용 및 폰트, 이미지 등은 그 출처가 따로 있음을 밝힙니다.</p>
+                </div><!-- .inner end -->
             </footer>
 
             <button type="button" class="top">
