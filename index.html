@@ -38,7 +38,7 @@
                 return paths;
             }
 
-            // 경로를 그리는 애니메이션
+            // 애니메이션
             function drawPaths(paths) {
                 return paths.reduce((prev, path, idx) => {
                     return prev.then(() => {
@@ -46,12 +46,12 @@
                         const isSecondSVG = (currentIndex === 1);
                         // 첫 번째 SVG: duration 400ms
                         // 두 번째 SVG: 마지막 두 경로는 800ms, 나머지는 300ms
-                        let duration = 400;
+                        let duration = 300; //첫 번째 문장 속도
                         if (isSecondSVG) {
                             if (idx >= paths.length - 2) {
-                                duration = 800;
+                                duration = 600; //밑줄, 스마일 속도
                             } else {
-                                duration = 300;
+                                duration = 200; //두 번째 문장 속도
                             }
                         }
                         return path
@@ -69,11 +69,10 @@
                 return rev.reduce((prev, path) => {
                     return prev.then(() => {
                         const len = path.getTotalLength();
-                        // 지우기 애니메이션은 모두 300ms
                         return path
                             .animate(
                                 [{ strokeDashoffset: 0 }, { strokeDashoffset: len }],
-                                { duration: 300, easing: 'ease-in-out', fill: 'forwards' }
+                                { duration: 250, easing: 'ease-in-out', fill: 'forwards' } //지우는 속도
                             )
                             .finished;
                     });
@@ -81,26 +80,21 @@
             }
 
             function animateLanding() {
-                // ① 모든 SVG에서 active 제거
                 landingSVGS.forEach(svg => $(svg).removeClass('active'));
 
-                // ② 현재 인덱스 SVG에만 active 추가 → CSS에서 display:block 적용됨
                 const svgEl = landingSVGS[currentIndex];
                 $(svgEl).addClass('active');
 
-                // ③ SVG 경로 그리기 → 0.8초 대기 → 조건 분기
                 const paths = initPaths(svgEl);
                 drawPaths(paths)
                     .then(() => new Promise(res => setTimeout(res, 800)))
                     .then(() => {
                         if (currentIndex === 1) {
-                            // 두 번째 SVG일 경우 → 3초 뒤 오버레이 슬라이드 아웃
                             setTimeout(() => {
                                 $('.landing').addClass('hide');
                                 $('.page').removeClass('hidden');
                             }, 2000);
                         } else {
-                            // 첫 번째 SVG일 경우 → erase 애니메이션 후 currentIndex 증가, 재귀 호출
                             return erasePaths(paths)
                                 .then(() => new Promise(res => setTimeout(res, 500)))
                                 .then(() => {
@@ -114,42 +108,31 @@
                     });
             }
 
-            // 초기 애니메이션 실행
+            // 애니메이션 실행
             animateLanding();
 
-            // ────────────────────────────────────────────────────────────────
-            // 2) 랜딩을 클릭하면 즉시 스케치북 넘기듯 위로 슬라이드 아웃
-            // ────────────────────────────────────────────────────────────────
+            // 위로 슬라이드 아웃
             $('.landing').on('click', () => {
                 $('.landing').addClass('hide');
                 $('.page').removeClass('hidden');
 
             });
 
-            // ────────────────────────────────────────────────────────────────
-            // 3) 랜딩 슬라이드 아웃 완료 시점 (transitionend) → 메인 활성화
-            // ────────────────────────────────────────────────────────────────
+            // 랜딩 슬라이드 아웃 → 메인 활성화
             $('.landing')[0].addEventListener('transitionend', (e) => {
                 if (
-                    e.propertyName === 'transform' &&        // transform 애니메이션이 끝날 때
-                    $('.landing').hasClass('hide')           // hide 클래스가 붙어 있다면
+                    e.propertyName === 'transform' && 
+                    $('.landing').hasClass('hide')
                 ) {
-                    // ① 랜딩을 화면에서 완전히 제거
                     $('.landing').css('display', 'none');
-                    // ② body 스크롤 다시 허용
                     $('body').css('overflow', 'auto');
                 }
-            });
+            }); //랜딩페이지 end
 
             //섹션1 슬라이드
             var swiper = new Swiper(".sec01Swiper", {
                 slidesPerView: 2,
                 spaceBetween: 90,
-                /* pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                    type: "progressbar",
-                }, */
                 navigation: {
                     nextEl: ".swiper-button-next",
                     prevEl: ".swiper-button-prev",
@@ -157,19 +140,43 @@
             });
 
             //섹션2 카테고리
-            $(document).ready(function () {
-                $('.category-tab').on('click', '.tab', function () {
-                    $('.category-tab .tab-active').removeClass('tab-active');
-                    $(this).addClass('tab-active');
+            $('.category-tab .tab').on('click tab', function () {
+                $('.category-tab .tab').removeClass('tab-active');
+                $(this).addClass('tab-active');
 
-                    const filter = $(this).data('filter');
-                    if (filter === 'all') {
-                        $('.item').show();
-                    } else {
-                        $('.item').hide();
-                        $(`.item[data-type="${filter}"]`).show();
-                    }
-                });
+
+                const filter = $(this).data('filter');
+                console.log(filter)
+                if (filter === 'all') {
+                    $('.item').show();
+                } else {
+                    $('.item').each(function () {
+                        const dataType = $(this).attr('data-type') || '';
+                        const types = dataType.trim().split(/\s+/); // 공백 기준 분할
+
+                        //includes(filter)로 원하는 값이 포함되어 있는지 체크
+
+                        if (types.includes(filter)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+            });
+
+            //섹션2 graphic design
+            var swiper = new Swiper(".sec02Swiper", {
+                slidesPerView: 4,
+                spaceBetween: 24,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
             });
 
             // toastbox
@@ -624,22 +631,27 @@
                         </div><!-- title end -->
 
                         <div class="category-tab">
-                            <button class="tab-active" data-filter="all">All</button>
+                            <button class="tab tab-active" data-filter="all">All</button>
                             <button class="tab" data-filter="Web">Web</button>
                             <button class="tab" data-filter="Mobile">Mobile</button>
                         </div><!-- .category-tab end -->
 
                         <div class="item_wrap">
-                            <div class="item" data-type="web mobile">
+                            <div class="item" data-type="Web Mobile">
                                 <div class="image">
                                     <img src="img/neez-web.png" alt="neez-web" class="first-web">
                                     <img src="img/neez-mobile.png" alt="neez-mobile" class="second-mobile">
                                 </div><!-- .image end -->
-                                <div class="text">
+                                <div class="text text-01">
                                     <h3>NEEZ 모작 (반응형)</h3>
-                                    <p>과제 설명</p>
-                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
-                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                    <p> IntersectionObserver, <br>
+                                        requestAnimationFrame <br>
+                                        활용하여 원본 사이트와 동일한 인터랙션을 구현</p>
+                                    <p><strong>Tool :
+                                            <br>
+                                        </strong>피그마, HTML, CSS, JavaScript, jQuery</p>
+                                    <p><strong>Contribution : </strong>코딩</p>
+                                    <p><strong>page : </strong>메인</p>
 
                                     <div class="link">
                                         <a href="#">(바로가기)</a>
@@ -648,16 +660,20 @@
                                 </div><!-- text -->
                             </div><!-- .item end -->
 
-                            <div class="item" data-type="web mobile">
+                            <div class="item" data-type="Web Mobile">
                                 <div class="image">
                                     <img src="img/오늘의집-web.png" alt="오늘의집-web" class="first-web">
                                     <img src="img/오늘의집-mobile.png" alt="오늘의집-mobile" class="second-mobile">
                                 </div><!-- .image end -->
-                                <div class="text">
+                                <div class="text text-02">
                                     <h3>오늘의집 리디자인 (반응형)</h3>
-                                    <p>과제 설명</p>
-                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
-                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                    <p>커뮤니티 및 쇼핑 UX 중심으로 <br>
+                                        와이어프레임 및 프로토타입 제작 <br>
+                                        <!--  > 복잡한 콘텐츠 구성을 간소화하여 카테고리, 추천 시스템, 큐레이션 영역을 개선 -->
+                                    </p>
+                                    <p><strong>Tool : </strong>피그마</p>
+                                    <p><strong>Contribution : </strong>기획, 디자인</p>
+                                    <p><strong>page : </strong>메인, 서브1</p>
 
                                     <div class="link">
                                         <a href="#">(바로가기)</a>
@@ -666,16 +682,18 @@
                                 </div><!-- text -->
                             </div><!-- .item end -->
 
-                            <div class="item" data-type="web mobile">
+                            <div class="item" data-type="Web Mobile">
                                 <div class="image">
                                     <img src="img/오복식품-web.png" alt="오복식품-web" class="first-web">
                                     <img src="img/오복식품-mobile.png" alt="오복식품-mobile" class="second-mobile">
                                 </div><!-- .image end -->
-                                <div class="text">
+                                <div class="text text-03">
                                     <h3>오복식품 리디자인 (반응형)</h3>
-                                    <p>과제 설명</p>
-                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
-                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                    <p>불필요한 요소를 정리하고 세련된 톤으로 재구성하여<br>
+                                        글로벌 브랜드 감성의 UI/UX로 개선</p>
+                                    <p><strong>Tool : </strong>피그마</p>
+                                    <p><strong>Contribution : </strong>기획, 디자인</p>
+                                    <p><strong>Page : </strong>메인</p>
 
                                     <div class="link">
                                         <a href="#">(바로가기)</a>
@@ -684,16 +702,19 @@
                                 </div><!-- text -->
                             </div><!-- .item end -->
 
-                            <div class="item" data-type="mobile">
+                            <div class="item" data-type="Mobile">
                                 <div class="image only-mobile">
                                     <img src="img/아몬즈-mobile.png" alt="아몬즈-mobile" class="only-mobile01">
                                     <img src="img/아몬즈-mobile1.png" alt="아몬즈-mobile1" class="only-mobile02">
                                 </div><!-- .image end -->
-                                <div class="text">
-                                    <h3>아몬즈 리디자인 (모바일)</h3>
-                                    <p>과제 설명</p>
-                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
-                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                <div class="text text-04">
+                                    <h3>아몬즈 앱 리디자인 (모바일)</h3>
+                                    <p>사용자 흐름을 재구성하며 <br>
+                                        카테고리 분류와 개인화 UI를 적용해 <br>
+                                        사용성 문제 개선</p>
+                                    <p><strong>Tool : </strong>피그마</p>
+                                    <p><strong>Contribution : </strong>기획, 디자인</p>
+                                    <p><strong>Page : </strong>메인, 서브1, 서브2</p>
 
                                     <div class="link">
                                         <a href="#">(바로가기)</a>
@@ -702,15 +723,18 @@
                                 </div><!-- text -->
                             </div><!-- .item end -->
 
-                            <div class="item" data-type="web">
+                            <div class="item" data-type="Web">
                                 <div class="image">
                                     <img src="img/구찌오스테리아.png" alt="구찌오스테리아-web" class="only-web01">
                                 </div><!-- .image end -->
-                                <div class="text">
+                                <div class="text text-05">
                                     <h3>구찌오스테리아 서울 리디자인 (웹)</h3>
-                                    <p>과제 설명</p>
-                                    <p><strong>tool :</strong> (프로그램 및 언어, 라이브러리)</p>
-                                    <p><strong>contribution :</strong> (기획, 디자인, 코딩)</p>
+                                    <p>브랜드의 고급스러운 이미지를 유지하면서,<br>
+                                        사용자 경험상의 문제들을 개선하여<br>
+                                        안정적이고 직관적인 UI/UX로 재구성</p>
+                                    <p><strong>Tool : </strong>피그마, HTML, CSS</p>
+                                    <p><strong>Contribution : </strong>기획, 디자인, 코딩</p>
+                                    <p><strong>Page : </strong>메인</p>
 
                                     <div class="link">
                                         <a href="#">(바로가기)</a>
@@ -723,12 +747,24 @@
                         <div class="category-tab">
                             <button data-filter="GRAPHIC DESIGN">GRAPHIC DESIGN</button>
                         </div>
-                        <div class="item_wrap">
-                            <div class="item">
-
-                            </div><!-- .item end -->
-                        </div><!-- .item_wrap end -->
-                    </div><!-- .inner end -->
+                        <!-- Swiper -->
+                        <div class="swiper sec02Swiper">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="img/graphic.gif" alt="graphic_design01">
+                                </div><!-- .swiper-slide end -->
+                                <div class="swiper-slide">
+                                    <img src="img/blend_effect.jpg" alt="graphic_design02">
+                                </div><!-- .swiper-slide end -->
+                                <div class="swiper-slide">
+                                    <img src="img/distort-1.jpg" alt="graphic_design03">
+                                </div><!-- .swiper-slide end -->
+                                <div class="swiper-slide">
+                                    <img src="img/distort-2.jpg" alt="graphic_design04">
+                                </div><!-- .swiper-slide end -->
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div><!-- .inner end -->
                 </section><!-- .section-02 end -->
 
                 <section class="section section-03">
@@ -768,91 +804,88 @@
 
                     </div><!-- .inner end -->
                 </section><!-- .section-03 end -->
+
+                <div class="sketch_wrapper">
+                    <div class="inner">
+                        <div class="notebook-bg">
+                            <img id="paperImage" src="img/sketch.png" alt="sketch_notebook_image">
+                        </div><!-- .notebook-bg end -->
+                        <canvas id="drawingPad"></canvas>
+                    </div><!-- .inner end -->
+                </div><!-- sketch_wrapper end -->
+
+                <div class="swiper paper-slide">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="img/TORN1.png" alt="torn-paper_slide-1">
+                            <p>#html</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN2.png" alt="torn-paper_slide-2">
+                            <p>#css</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN3.png" alt="torn-paper_slide-3">
+                            <p>#web design</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN4.png" alt="torn-paper_slide-4">
+                            <p>#javascript</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN5.png" alt="torn-paper_slide-5">
+                            <p>#UI/UX</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN6.png" alt="torn-paper_slide-6">
+                            <p>#FIGMA</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN7.png" alt="torn-paper_slide-7">
+                            <p>#GRAPHIC DESIGN</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN1.png" alt="torn-paper_slide-1">
+                            <p>#marketing</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN2.png" alt="torn-paper_slide-2">
+                            <p>#idea</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN3.png" alt="torn-paper_slide-3">
+                            <p>#create</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN4.png" alt="torn-paper_slide-4">
+                            <p>#fun & friendly</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN5.png" alt="torn-paper_slide-5">
+                            <p>#positive</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN6.png" alt="torn-paper_slide-6">
+                            <p>#simple</p>
+                        </div><!-- .swiper-slide end -->
+                        <div class="swiper-slide">
+                            <img src="img/TORN7.png" alt="torn-paper_slide-7">
+                            <p>#growth</p>
+                        </div><!-- .swiper-slide end -->
+                    </div><!-- swiper-wrapper -->
+                </div><!-- paper-slide -->
             </div><!-- .main end -->
-
-            <div class="sketch_wrapper">
-                <div class="inner">
-                    <div class="notebook-bg">
-                        <img id="paperImage" src="img/sketch.png" alt="sketch_notebook_image">
-                    </div>
-                    <canvas id="drawingPad"></canvas>
-                </div>
-            </div><!-- sketch_wrapper end -->
-
-            <div class="swiper paper-slide">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <img src="img/TORN1.png" alt="torn-paper_slide-1">
-                        <p>#html</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN2.png" alt="torn-paper_slide-2">
-                        <p>#css</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN3.png" alt="torn-paper_slide-3">
-                        <p>#web design</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN4.png" alt="torn-paper_slide-4">
-                        <p>#javascript</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN5.png" alt="torn-paper_slide-5">
-                        <p>#UI/UX</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN6.png" alt="torn-paper_slide-6">
-                        <p>#FIGMA</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN7.png" alt="torn-paper_slide-7">
-                        <p>#GRAPHIC DESIGN</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN1.png" alt="torn-paper_slide-1">
-                        <p>#marketing</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN2.png" alt="torn-paper_slide-2">
-                        <p>#idea</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN3.png" alt="torn-paper_slide-3">
-                        <p>#create</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN4.png" alt="torn-paper_slide-4">
-                        <p>#fun & friendly</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN5.png" alt="torn-paper_slide-5">
-                        <p>#positive</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN6.png" alt="torn-paper_slide-6">
-                        <p>#simple</p>
-                    </div><!-- .swiper-slide end -->
-                    <div class="swiper-slide">
-                        <img src="img/TORN7.png" alt="torn-paper_slide-7">
-                        <p>#growth</p>
-                    </div><!-- .swiper-slide end -->
-                </div><!-- swiper-wrapper -->
-            </div><!-- paper-slide -->
-
             <footer class="footer">
                 <div class="inner">
                     <p>※ 본 사이트는 상업적 목적이 아닌 개인 포트폴리오 사이트로 제작되었습니다. <br>
                         일부 내용 및 폰트, 이미지 등은 그 출처가 따로 있음을 밝힙니다.</p>
                 </div><!-- .inner end -->
             </footer>
-
-            <button type="button" class="top">
-                <img src="img/top_btn.svg" alt="top_btn">
-            </button><!-- top end -->
         </div><!-- .page end -->
     </div><!-- .page-container end -->
-
+    <button type="button" class="top">
+        <img src="img/top_btn.svg" alt="top_btn">
+    </button><!-- top end -->
 
 </body>
 

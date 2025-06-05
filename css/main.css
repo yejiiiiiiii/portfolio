@@ -26,6 +26,13 @@
     font-style: normal;
 }
 
+@font-face {
+	font-family: 'Pretendard';
+	font-weight: 400;
+	font-display: swap;
+	src: local('Pretendard Regular'), url(./woff2/Pretendard-Regular.woff2) format('woff2'), url(./woff/Pretendard-Regular.woff) format('woff');
+}
+
 /* Scrollbar */
 *::-webkit-scrollbar {
     width: 8px;
@@ -97,7 +104,6 @@ button:active {
     font-family: 'Lemon Bird';
     font-size: 40px;
 }
-
 
 h2 {
     font-size: 32px;
@@ -253,6 +259,17 @@ b {
     position: relative;
 }
 
+/* 🔥🔥🔥 */
+.intro::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: "";
+    background: url('../img/paper2-1.png') no-repeat center center;
+    background-size: cover;
+    z-index: 99;
+}
+
 .intro .inner {
     position: relative;
     text-align: center;
@@ -341,6 +358,7 @@ b {
 
 .main {
     padding-top: 120px;
+    background: url('../img/paper1.png') no-repeat center bottom / 100%;
 }
 
 /* section 🔻 */
@@ -362,10 +380,21 @@ section .title {
 /* section-01 1️⃣ */
 .section-01 {
     /* height: 100vh; */
+    position: relative;
 }
 
 .section-01 .inner {
     position: relative;
+}
+
+/* 🔥🔥🔥 */
+.section-01 .inner::after {
+    content: "";
+    background: url('../img/paper2-2.png') no-repeat center center;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .section-01 .inner .title {
@@ -413,6 +442,13 @@ section .title {
     text-align: center;
 }
 
+.section-01 .inner .me:hover .image {
+    background: url('../img/section1-1-2.svg') no-repeat;
+}
+
+.section-01 .inner .me:hover .image img {
+    display: none;
+}
 
 .section-01 .inner .me .image {
     position: relative;
@@ -439,7 +475,6 @@ section .title {
     margin: 0 auto;
 }
 
-
 .section-01 .inner .slider-overlay {
     position: absolute;
     top: 153px;
@@ -452,7 +487,6 @@ section .title {
     pointer-events: none;
     overflow: hidden;
 }
-
 
 .section-01 .inner .sec01Swiper .swiper-slide {
     width: 400px !important;
@@ -553,7 +587,7 @@ section .title {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 20px;
     overflow: visible;
 }
 
@@ -564,6 +598,8 @@ section .title {
     justify-content: center;
     margin-top: 40px;
     overflow: visible;
+    padding-top: 40px;
+    padding-bottom: 40px;
 }
 
 .section-02 .inner .category-tab .tab {
@@ -664,16 +700,12 @@ section .title {
     object-fit: contain;
 }
 
-.section-02 .inner .item_wrap .item .image .first-web {}
-
 .section-02 .inner .item_wrap .item .image .second-mobile {
     position: absolute;
-    bottom: -10%;
-    right: -20%;
-    rotate: 5deg;
+    bottom: -8%;
+    left: -20%;
+    rotate: -5deg;
 }
-
-.section-02 .inner .item_wrap .item .only-mobile {}
 
 .section-02 .inner .item_wrap .item .only-mobile .only-mobile01 {
     z-index: 1;
@@ -684,23 +716,33 @@ section .title {
     rotate: 8deg;
 }
 
-.section-02 .inner .item_wrap .item .image .only-web01 {}
-
-.section-02 .inner .item_wrap .item.text {
+.section-02 .inner .item_wrap .item .text {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 0 12px 120px;
+
+    background: url('../img/Stickynote-1.png') no-repeat center center/ cover;
+    background-size: 100%;
+    width: 560px;
+    height: 450px;
 }
 
-.section-02 .inner .item_wrap .item.text::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 400px;
-    background: url('../img/Stickynote-1.png') no-repeat center center;
-    background-size: contain;
-    z-index: -2;
+.section-02 .inner .item_wrap .item .text-02{
+    background-image: url('../img/Stickynote-2.png');
+    height: 500px;
+}
+.section-02 .inner .item_wrap .item .text-03{
+    background-image: url('../img/Stickynote-3.png');
+}
+.section-02 .inner .item_wrap .item .text-04{
+    background-image: url('../img/Stickynote-4.png');
+}
+.section-02 .inner .item_wrap .item .text-05{
+    background-image: url('../img/Stickynote.png');
 }
 
 .section-02 .inner .item_wrap .item.text h3 {
@@ -708,13 +750,55 @@ section .title {
     font-weight: 700;
 }
 
-.section-02 .inner .item_wrap .item.text p {}
+.section-02 .inner .item_wrap .item.text p {
+    font-family: 'Pretendard' !important;
+}
 
-.section-02 .inner .item_wrap .item.text strong {}
+.section-02 .inner .item_wrap .item.text b {}
 
-.section-02 .inner .item_wrap .item .link {}
+.section-02 .inner .item_wrap .item .link {
+    padding: 12px 20px;
+}
 
 .section-02 .inner .item_wrap .item .link a {}
+
+.section-02 .inner .item_wrap .item .text_bg {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    z-index: -99;
+   width: 600px;
+}
+
+
+.section-02 .inner .sec02Swiper {
+    width: 100%;
+}
+
+.section-02 .inner .sec02Swiper .swiper-wrapper {
+    width: 100%;
+   
+}
+
+.section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide {
+    width: 25%;
+    padding: 12px 12px;
+    background-color: #fff;
+    box-shadow: -2px 4px 8px #999999b4;
+     
+}
+
+.section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide:hover img{
+    scale: 1.1;
+}
+
+.section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide img {
+    width: 100%;
+    object-fit: contain;
+    transition: 0.2s;
+}
+
 
 /* section-03 3️⃣ */
 .section-03 {
@@ -858,10 +942,20 @@ section .title {
     display: inline-block;
 }
 
+/* 🔥🔥🔥 */
+.sketch_wrapper .inner .notebook-bg:active {
+    cursor: url('../img/brush.svg') 16 16, auto;
+}
+
 .sketch_wrapper .inner .notebook-bg img {
     display: block;
     max-width: 100%;
-    height: auto;
+    height: 80vh;
+}
+
+.sketch_wrapper .inner .notebook-bg img::after {
+    content: "";
+    background: url('../img/smiling-star.png') 40 40 / no-repeat center;
 }
 
 #drawingPad {
@@ -924,26 +1018,23 @@ section .title {
 }
 
 .footer p {
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 }
 
 /* top-btn */
 .top {
     position: fixed;
-    width: 60px;
+    width: 80px;
     right: 80px;
     bottom: 80px;
     cursor: url('../img/mouse.svg') 18 18, auto;
     background-color: transparent;
     z-index: 99999;
-
-    display: none;
 }
 
 .top img {
-    width: 100%;
-    height: 100%;
+    width: 80%;
     display: block;
 }
 
