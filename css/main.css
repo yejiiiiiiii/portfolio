@@ -27,10 +27,10 @@
 }
 
 @font-face {
-	font-family: 'Pretendard';
-	font-weight: 400;
-	font-display: swap;
-	src: local('Pretendard Regular'), url(./woff2/Pretendard-Regular.woff2) format('woff2'), url(./woff/Pretendard-Regular.woff) format('woff');
+    font-family: 'Pretendard';
+    font-weight: 400;
+    font-display: swap;
+    src: local('Pretendard Regular'), url(./woff2/Pretendard-Regular.woff2) format('woff2'), url(./woff/Pretendard-Regular.woff) format('woff');
 }
 
 /* Scrollbar */
@@ -257,17 +257,7 @@ b {
 
     overflow: visible;
     position: relative;
-}
-
-/* 🔥🔥🔥 */
-.intro::after {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    content: "";
-    background: url('../img/paper2-1.png') no-repeat center center;
-    background-size: cover;
-    z-index: 99;
+    
 }
 
 .intro .inner {
@@ -359,6 +349,7 @@ b {
 .main {
     padding-top: 120px;
     background: url('../img/paper1.png') no-repeat center bottom / 100%;
+    background-size: 100vw 120vh;
 }
 
 /* section 🔻 */
@@ -385,16 +376,6 @@ section .title {
 
 .section-01 .inner {
     position: relative;
-}
-
-/* 🔥🔥🔥 */
-.section-01 .inner::after {
-    content: "";
-    background: url('../img/paper2-2.png') no-repeat center center;
-    background-size: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
 }
 
 .section-01 .inner .title {
@@ -489,15 +470,11 @@ section .title {
 }
 
 .section-01 .inner .sec01Swiper .swiper-slide {
-    width: 400px !important;
+    width: 495px !important;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
-}
-
-.section-01 .inner .sec01Swiper .swiper-slide:nth-child(2) {
-    width: 280px !important;
 }
 
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide img {
@@ -731,17 +708,20 @@ section .title {
     height: 450px;
 }
 
-.section-02 .inner .item_wrap .item .text-02{
+.section-02 .inner .item_wrap .item .text-02 {
     background-image: url('../img/Stickynote-2.png');
     height: 500px;
 }
-.section-02 .inner .item_wrap .item .text-03{
+
+.section-02 .inner .item_wrap .item .text-03 {
     background-image: url('../img/Stickynote-3.png');
 }
-.section-02 .inner .item_wrap .item .text-04{
+
+.section-02 .inner .item_wrap .item .text-04 {
     background-image: url('../img/Stickynote-4.png');
 }
-.section-02 .inner .item_wrap .item .text-05{
+
+.section-02 .inner .item_wrap .item .text-05 {
     background-image: url('../img/Stickynote.png');
 }
 
@@ -750,11 +730,15 @@ section .title {
     font-weight: 700;
 }
 
-.section-02 .inner .item_wrap .item.text p {
+.section-02 .inner .item_wrap .item .text p {
     font-family: 'Pretendard' !important;
+    color: #333333;
+    font-weight: 300;
 }
 
-.section-02 .inner .item_wrap .item.text b {}
+.section-02 .inner .item_wrap .item .text strong {
+    font-weight: 700;
+}
 
 .section-02 .inner .item_wrap .item .link {
     padding: 12px 20px;
@@ -768,7 +752,7 @@ section .title {
     left: 40%;
     transform: translate(-50%, -50%);
     z-index: -99;
-   width: 600px;
+    width: 600px;
 }
 
 
@@ -778,7 +762,7 @@ section .title {
 
 .section-02 .inner .sec02Swiper .swiper-wrapper {
     width: 100%;
-   
+
 }
 
 .section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide {
@@ -786,10 +770,10 @@ section .title {
     padding: 12px 12px;
     background-color: #fff;
     box-shadow: -2px 4px 8px #999999b4;
-     
+
 }
 
-.section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide:hover img{
+.section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide:hover img {
     scale: 1.1;
 }
 
@@ -843,8 +827,6 @@ section .title {
     width: 120px;
 }
 
-.section-03 .inner .title h2 {}
-
 .section-03 .inner .cont {
     display: flex;
     flex-direction: column;
@@ -868,6 +850,10 @@ section .title {
 
 .section-03 .inner .cont .copy {
     width: 30px;
+}
+
+.section-03 .inner .cont .copy:hover {
+    cursor: url('../img/pointer.svg') 16 16, auto;
 }
 
 .section-03 .inner .cont .email {
@@ -935,6 +921,18 @@ section .title {
 .sketch_wrapper {
     width: max-content;
     margin: 20px auto;
+}
+
+.sketch_wrapper::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    background: url('../img/.png') no-repeat center/contain;
+    pointer-events: none;
 }
 
 .sketch_wrapper .inner {
