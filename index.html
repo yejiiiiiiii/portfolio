@@ -96,7 +96,7 @@
                             }, 2000);
                         } else {
                             return erasePaths(paths)
-                                .then(() => new Promise(res => setTimeout(res, 500)))
+                                .then(() => new Promise(res => setTimeout(res, 300)))
                                 .then(() => {
                                     currentIndex += 1;
                                     animateLanding();
@@ -121,7 +121,7 @@
             // 랜딩 슬라이드 아웃 → 메인 활성화
             $('.landing')[0].addEventListener('transitionend', (e) => {
                 if (
-                    e.propertyName === 'transform' && 
+                    e.propertyName === 'transform' &&
                     $('.landing').hasClass('hide')
                 ) {
                     $('.landing').css('display', 'none');
@@ -229,26 +229,41 @@
             });
 
             //drawing pad
-            var paperImg = document.getElementById('paperImage');
-            var canvas = document.getElementById('drawingPad');
-            var ctx = canvas.getContext('2d');
-            var maskCanvas = document.createElement('canvas');
-            var maskCtx = maskCanvas.getContext('2d');
-            var maskImageData = null;
-            var drawing = false;
-            var brushColor = '#156bd8';
-            var brushSize = 5;
+            // 🎨 기본 설정
+            const paperImg = document.getElementById('paperImage');
+            const canvas = document.getElementById('drawingPad');
+            const ctx = canvas.getContext('2d');
+            const maskCanvas = document.createElement('canvas');
+            const maskCtx = maskCanvas.getContext('2d');
 
+            let maskImageData = null;
+            let drawing = false;
+            let brushColor = '#156bd8';
+            let brushSize = 5;
+
+            // ✏️ 지우개 도구 설정
+            const eraserBtn = document.getElementById('eraserBtn');
+            let isErasing = false;
+
+            eraserBtn.addEventListener('click', () => {
+                isErasing = !isErasing;
+                eraserBtn.textContent = isErasing ? 'Brush' : 'Eraser';
+                eraserBtn.classList.toggle('active', isErasing);
+            });
+
+            // 🔧 캔버스 크기 초기화
             function resizeCanvas() {
-                var imgW = paperImg.width;
-                var imgH = paperImg.height;
+                const imgW = paperImg.width;
+                const imgH = paperImg.height;
                 canvas.width = imgW;
                 canvas.height = imgH;
                 maskCanvas.width = imgW;
                 maskCanvas.height = imgH;
+
                 maskCtx.clearRect(0, 0, imgW, imgH);
                 maskCtx.drawImage(paperImg, 0, 0, imgW, imgH);
                 maskImageData = maskCtx.getImageData(0, 0, imgW, imgH).data;
+
                 ctx.clearRect(0, 0, imgW, imgH);
             }
 
@@ -259,41 +274,49 @@
             }
             window.addEventListener('resize', resizeCanvas);
 
+            // 🧐 페이퍼 영역 체크
             function isOverPaper(x, y) {
                 if (!maskImageData) return false;
-                var width = maskCanvas.width;
-                var idx = (y * width + x) * 4;
+                const width = maskCanvas.width;
+                const idx = (y * width + x) * 4;
                 return maskImageData[idx + 3] > 0;
             }
 
+            // 🖌️ 마우스 드로잉
             canvas.addEventListener('mousedown', function (e) {
-                var rect = canvas.getBoundingClientRect();
-                var x = Math.floor(e.clientX - rect.left);
-                var y = Math.floor(e.clientY - rect.top);
-                if (!isOverPaper(x, y)) {
-                    drawing = false;
-                    return;
-                }
+                const rect = canvas.getBoundingClientRect();
+                const x = Math.floor(e.clientX - rect.left);
+                const y = Math.floor(e.clientY - rect.top);
+
+                if (!isOverPaper(x, y)) return;
                 drawing = true;
+
+                // 지우개/그리기 모드 설정 (반드시 beginPath 전)
+                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+
                 ctx.beginPath();
                 ctx.lineWidth = brushSize;
                 ctx.lineCap = 'round';
                 ctx.strokeStyle = brushColor;
                 ctx.moveTo(x, y);
             });
+
             canvas.addEventListener('mousemove', function (e) {
                 if (!drawing) return;
-                var rect = canvas.getBoundingClientRect();
-                var x = Math.floor(e.clientX - rect.left);
-                var y = Math.floor(e.clientY - rect.top);
+                const rect = canvas.getBoundingClientRect();
+                const x = Math.floor(e.clientX - rect.left);
+                const y = Math.floor(e.clientY - rect.top);
+
                 if (!isOverPaper(x, y)) {
                     drawing = false;
                     ctx.closePath();
                     return;
                 }
+
                 ctx.lineTo(x, y);
                 ctx.stroke();
             });
+
             document.addEventListener('mouseup', function () {
                 if (drawing) {
                     drawing = false;
@@ -301,13 +324,19 @@
                 }
             });
 
+            // 🖌️ 터치 드로잉
             canvas.addEventListener('touchstart', function (e) {
-                var touch = e.touches[0];
-                var rect = canvas.getBoundingClientRect();
-                var x = Math.floor(touch.clientX - rect.left);
-                var y = Math.floor(touch.clientY - rect.top);
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const x = Math.floor(touch.clientX - rect.left);
+                const y = Math.floor(touch.clientY - rect.top);
+
                 if (!isOverPaper(x, y)) return;
                 drawing = true;
+
+                // 지우개/그리기 모드 설정
+                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+
                 ctx.beginPath();
                 ctx.lineWidth = brushSize;
                 ctx.lineCap = 'round';
@@ -315,21 +344,25 @@
                 ctx.moveTo(x, y);
                 e.preventDefault();
             });
+
             canvas.addEventListener('touchmove', function (e) {
                 if (!drawing) return;
-                var touch = e.touches[0];
-                var rect = canvas.getBoundingClientRect();
-                var x = Math.floor(touch.clientX - rect.left);
-                var y = Math.floor(touch.clientY - rect.top);
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const x = Math.floor(touch.clientX - rect.left);
+                const y = Math.floor(touch.clientY - rect.top);
+
                 if (!isOverPaper(x, y)) {
                     drawing = false;
                     ctx.closePath();
                     return;
                 }
+
                 ctx.lineTo(x, y);
                 ctx.stroke();
                 e.preventDefault();
             });
+
             document.addEventListener('touchend', function () {
                 if (drawing) {
                     drawing = false;
@@ -568,8 +601,8 @@
                                         <img src="img/section1-1.svg" alt="education_icon">
                                         <strong class="sub-title">Education</strong>
                                         <div class="p_wrap">
-                                            <p>2025 [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
-                                            <p>2022 기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
+                                            <p>2025 &nbsp;[디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
+                                            <p>2022 &nbsp;기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
                                             <p>2021.08 동아대학교 중국학과 졸업</p>
                                             <p>2016.02 부흥고등학교 졸업</p>
                                         </div><!-- p_wrap end -->
@@ -811,6 +844,7 @@
                             <img id="paperImage" src="img/sketch.png" alt="sketch_notebook_image">
                         </div><!-- .notebook-bg end -->
                         <canvas id="drawingPad"></canvas>
+                        <button id="eraserBtn">Eraser</button>
                     </div><!-- .inner end -->
                 </div><!-- sketch_wrapper end -->
 
@@ -838,11 +872,11 @@
                         </div><!-- .swiper-slide end -->
                         <div class="swiper-slide">
                             <img src="img/TORN6.png" alt="torn-paper_slide-6">
-                            <p>#FIGMA</p>
+                            <p>#GRAPHIC DESIGN</p>
                         </div><!-- .swiper-slide end -->
                         <div class="swiper-slide">
                             <img src="img/TORN7.png" alt="torn-paper_slide-7">
-                            <p>#GRAPHIC DESIGN</p>
+                            <p>#FIGMA</p>
                         </div><!-- .swiper-slide end -->
                         <div class="swiper-slide">
                             <img src="img/TORN1.png" alt="torn-paper_slide-1">
