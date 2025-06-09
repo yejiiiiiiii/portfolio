@@ -93,7 +93,7 @@
                             setTimeout(() => {
                                 $('.landing').addClass('hide');
                                 $('.page').removeClass('hidden');
-                            }, 2000);
+                            }, 800); //랜딩페이지 올라가는 속도
                         } else {
                             return erasePaths(paths)
                                 .then(() => new Promise(res => setTimeout(res, 300)))
@@ -601,10 +601,10 @@
                                         <img src="img/section1-1.svg" alt="education_icon">
                                         <strong class="sub-title">Education</strong>
                                         <div class="p_wrap">
-                                            <p>2025 &nbsp;[디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
-                                            <p>2022 &nbsp;기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
-                                            <p>2021.08 동아대학교 중국학과 졸업</p>
-                                            <p>2016.02 부흥고등학교 졸업</p>
+                                            <p><span>2025</span> [디지털디자인] 트렌디한 UI/UX반응형 웹제작을 위한 웹퍼블리셔(디자인&코딩)프론트엔드 A</p>
+                                            <p><span>2022</span> 기업 아이덴티티 BX & 멀티광고콘텐츠디자인</p>
+                                            <p><span>2021.08</span> 동아대학교 중국학과 졸업</p>
+                                            <p><span>2016.02</span> 부흥고등학교 졸업</p>
                                         </div><!-- p_wrap end -->
                                     </div><!-- swiper-slide -->
 
@@ -687,9 +687,10 @@
                                     <p><strong>page : </strong>메인</p>
 
                                     <div class="link">
-                                        <a href="#">(바로가기)</a>
+                                        <a href="#" class="pdf">pdf</a>
+                                        <a href="#" class="figma">figma</a>
+                                        <a href="#" class="site">view site</a>
                                     </div><!-- .link end -->
-
                                 </div><!-- text -->
                             </div><!-- .item end -->
 
@@ -709,7 +710,9 @@
                                     <p><strong>page : </strong>메인, 서브1</p>
 
                                     <div class="link">
-                                        <a href="#">(바로가기)</a>
+                                        <a href="#" class="pdf">pdf</a>
+                                        <a href="#" class="figma">figma</a>
+                                        <a href="#" class="site">view site</a>
                                     </div><!-- .link end -->
 
                                 </div><!-- text -->
@@ -729,7 +732,9 @@
                                     <p><strong>Page : </strong>메인</p>
 
                                     <div class="link">
-                                        <a href="#">(바로가기)</a>
+                                        <a href="#" class="pdf">pdf</a>
+                                        <a href="#" class="figma">figma</a>
+                                        <a href="#" class="site">view site</a>
                                     </div><!-- .link end -->
 
                                 </div><!-- text -->
@@ -750,7 +755,9 @@
                                     <p><strong>Page : </strong>메인, 서브1, 서브2</p>
 
                                     <div class="link">
-                                        <a href="#">(바로가기)</a>
+                                        <a href="#" class="pdf">pdf</a>
+                                        <a href="#" class="figma">figma</a>
+                                        <a href="#" class="site">view site</a>
                                     </div><!-- .link end -->
 
                                 </div><!-- text -->
@@ -770,7 +777,9 @@
                                     <p><strong>Page : </strong>메인</p>
 
                                     <div class="link">
-                                        <a href="#">(바로가기)</a>
+                                        <a href="#" class="pdf">pdf</a>
+                                        <a href="#" class="figma">figma</a>
+                                        <a href="#" class="site">view site</a>
                                     </div><!-- .link end -->
 
                                 </div><!-- text -->
@@ -778,7 +787,7 @@
                         </div><!-- .item_wrap end -->
 
                         <div class="category-tab">
-                            <button data-filter="GRAPHIC DESIGN">GRAPHIC DESIGN</button>
+                            <button class="graphic_design">GRAPHIC DESIGN</button>
                         </div>
                         <!-- Swiper -->
                         <div class="swiper sec02Swiper">

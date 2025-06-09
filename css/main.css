@@ -33,6 +33,13 @@
     src: local('Pretendard Regular'), url(./woff2/Pretendard-Regular.woff2) format('woff2'), url(./woff/Pretendard-Regular.woff) format('woff');
 }
 
+@font-face {
+    font-family: 'LeeSeoyun';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/LeeSeoyun.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* Scrollbar */
 *::-webkit-scrollbar {
     width: 8px;
@@ -156,7 +163,7 @@ b {
     backface-visibility: hidden;
     transform-origin: top center;
     transform: rotateX(0deg);
-    transition: transform 2s ease-in-out;
+    transition: transform 1s ease-in-out;
 }
 
 .landing.hide {
@@ -247,7 +254,7 @@ b {
 
 /* intro 🎀 */
 .intro {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -257,7 +264,7 @@ b {
 
     overflow: visible;
     position: relative;
-    
+
 }
 
 .intro .inner {
@@ -349,7 +356,7 @@ b {
 .main {
     padding-top: 120px;
     background: url('../img/paper1.png') no-repeat center bottom / 100%;
-    background-size: 100vw 120vh;
+    background-size: 100% 120vh;
 }
 
 /* section 🔻 */
@@ -371,6 +378,7 @@ section .title {
 /* section-01 1️⃣ */
 .section-01 {
     /* height: 100vh; */
+    padding-bottom: 0;
     position: relative;
 }
 
@@ -579,6 +587,10 @@ section .title {
     padding-bottom: 40px;
 }
 
+.section-02 .inner .category-tab .graphic_design {
+    margin-top: 120px;
+}
+
 .section-02 .inner .category-tab .tab {
     position: relative;
     background: none;
@@ -731,7 +743,7 @@ section .title {
 }
 
 .section-02 .inner .item_wrap .item .text p {
-    font-family: 'Pretendard' !important;
+    font-family: 'LeeSeoyun' !important;
     color: #333333;
     font-weight: 300;
 }
@@ -742,9 +754,29 @@ section .title {
 
 .section-02 .inner .item_wrap .item .link {
     padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
 }
 
-.section-02 .inner .item_wrap .item .link a {}
+.section-02 .inner .item_wrap .item .link a {
+    font-family: 'Patrick Hand' !important;
+    font-size: 28px;
+    
+}
+
+/* 🔥🔥🔥 버튼 태그로 바꿔야하는지?? 백그라운드말고 이미지 첨부 가능한 방법 있는지?? */
+/* .section-02 .inner .item_wrap .item .link .pdf {
+    background: url('../img/link_btn-1.svg') no-repeat center / 100%;
+}
+
+.section-02 .inner .item_wrap .item .link .figma {
+    background: url('../img/link_btn-2.svg')  no-repeat center / 100%;
+}
+
+.section-02 .inner .item_wrap .item .link .site {
+    background: url('../img/link_btn-3.svg')  no-repeat center / 100%;
+} */
 
 .section-02 .inner .item_wrap .item .text_bg {
     position: absolute;
@@ -754,7 +786,6 @@ section .title {
     z-index: -99;
     width: 600px;
 }
-
 
 .section-02 .inner .sec02Swiper {
     width: 100%;
@@ -770,7 +801,6 @@ section .title {
     padding: 12px 12px;
     background-color: #fff;
     box-shadow: -2px 4px 8px #999999b4;
-
 }
 
 .section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide:hover img {
@@ -782,7 +812,6 @@ section .title {
     object-fit: contain;
     transition: 0.2s;
 }
-
 
 /* section-03 3️⃣ */
 .section-03 {
@@ -921,6 +950,7 @@ section .title {
 .sketch_wrapper {
     width: max-content;
     margin: 20px auto;
+    overflow: hidden;
 }
 
 .sketch_wrapper::before {
@@ -940,21 +970,16 @@ section .title {
     display: inline-block;
 }
 
-/* 🔥🔥🔥 */
-.sketch_wrapper .inner .notebook-bg:active {
-    cursor: url('../img/brush.svg') 16 16, auto;
-}
-
+/* 🔥🔥🔥  */
 .sketch_wrapper .inner .notebook-bg img {
     display: block;
     max-width: 100%;
     height: 80vh;
 }
 
-.sketch_wrapper .inner .notebook-bg img::after {
-    content: "";
-    background: url('../img/smiling-star.png') 40 40 / no-repeat center;
-}
+/* 🔥🔥🔥  아이콘, 텍스트 배치
+브러쉬/지우개 아이콘으로 커서 변경
+*/
 
 #drawingPad {
     position: absolute;
