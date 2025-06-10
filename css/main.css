@@ -105,11 +105,14 @@ a:active {
 
 button,
 button:hover,
-button:focus,
-button:active {
+button:focus {
     cursor: url('../img/pointer.svg') 16 16, auto;
     font-family: 'Lemon Bird';
     font-size: 40px;
+}
+
+button:active {
+    cursor: url('../img/click.svg') 16 16, auto;
 }
 
 h2 {
@@ -579,12 +582,17 @@ section .title {
 .section-02 .inner .category-tab {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 80px;
     justify-content: center;
-    margin-top: 40px;
     overflow: visible;
     padding-top: 40px;
     padding-bottom: 40px;
+
+    position: sticky;
+    top: 0;
+    left: 50%;
+    z-index: 99;
+    background-color: #F3F3F3;
 }
 
 .section-02 .inner .category-tab .graphic_design {
@@ -620,8 +628,8 @@ section .title {
     background: url('../img/menu_tab_point.svg') no-repeat center center;
     background-size: 100% auto;
 
-    width: 140%;
-    height: 140%;
+    width: 120px;
+    height: 100px;
     z-index: 0;
 }
 
@@ -660,8 +668,6 @@ section .title {
 .section-02 .inner .title img {
     width: 120px;
 }
-
-.section-02 .inner .title h2 {}
 
 .section-02 .inner .category-tab {
     padding-bottom: 80px;
@@ -710,14 +716,14 @@ section .title {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     gap: 12px;
-    padding: 12px 0 12px 120px;
+    padding: 12px 24px 12px 140px;
 
     background: url('../img/Stickynote-1.png') no-repeat center center/ cover;
     background-size: 100%;
-    width: 560px;
-    height: 450px;
+    width: 630px;
+    height: 600px;
 }
 
 .section-02 .inner .item_wrap .item .text-02 {
@@ -753,30 +759,73 @@ section .title {
 }
 
 .section-02 .inner .item_wrap .item .link {
-    padding: 12px 20px;
+    /* padding: 12px 20px; */
     display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
+
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
 }
 
 .section-02 .inner .item_wrap .item .link a {
-    font-family: 'Patrick Hand' !important;
-    font-size: 28px;
-    
+    font-family: 'Ownglyph_ryurue-Rg' !important;
+    font-size: 26px;
+    text-align: center;
+    line-height: 36px;
+    padding: 8px 4px;
 }
 
-/* 🔥🔥🔥 버튼 태그로 바꿔야하는지?? 백그라운드말고 이미지 첨부 가능한 방법 있는지?? */
-/* .section-02 .inner .item_wrap .item .link .pdf {
-    background: url('../img/link_btn-1.svg') no-repeat center / 100%;
+.section-02 .inner .item_wrap .item .link .pdf {
+    width: 200px;
+    height: 60px;
+    background: url('../img/link_btn-1.svg') no-repeat center / contain;
+    transition: 0.4s;
+}
+
+.section-02 .inner .item_wrap .item .link .pdf:hover {
+    background-image: url('../img/link_hover-1.svg');
+    color: #fff;
+}
+
+.section-02 .inner .item_wrap .item .link .pdf:active {
+    background-image: url('../img/link_click-1.svg');
+    color: #fff;
 }
 
 .section-02 .inner .item_wrap .item .link .figma {
-    background: url('../img/link_btn-2.svg')  no-repeat center / 100%;
+    width: 200px;
+    height: 60px;
+    background: url('../img/link_btn-2.svg') no-repeat center / contain;
+    transition: 0.4s;
+}
+
+.section-02 .inner .item_wrap .item .link .figma:hover {
+    background-image: url('../img/link_hover-2.svg');
+    color: #fff;
+}
+
+.section-02 .inner .item_wrap .item .link .figma:active {
+    background-image: url('../img/link_click-2.svg');
+    color: #fff;
 }
 
 .section-02 .inner .item_wrap .item .link .site {
-    background: url('../img/link_btn-3.svg')  no-repeat center / 100%;
-} */
+    width: 300px;
+    height: 60px;
+    background: url('../img/link_btn-3.svg') no-repeat center / contain;
+    transition: 0.4s;
+}
+
+.section-02 .inner .item_wrap .item .link .site:hover {
+    background-image: url('../img/link_hover-3.svg');
+    color: #fff;
+}
+
+.section-02 .inner .item_wrap .item .link .site:active {
+    background-image: url('../img/link_click-3.svg');
+    color: #fff;
+}
 
 .section-02 .inner .item_wrap .item .text_bg {
     position: absolute;
