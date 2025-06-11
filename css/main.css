@@ -156,7 +156,7 @@ b {
     width: 100%;
     height: 100vh;
     background: url('../img/paper1.png') no-repeat center center / cover;
-    z-index: 9999;
+    z-index: 99999;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -210,13 +210,13 @@ b {
 /* page */
 .header {
     width: 100%;
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
-    z-index: 999;
+    z-index: 9999;
     /* 높게 띄워서 인트로보다 위에 보이게 */
     background: url('../img/paper.png') no-repeat center bottom / cover;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 12px rgba(0, 0, 0, 0.15);
 }
 
 .header .inner {
@@ -246,8 +246,16 @@ b {
     gap: 120px;
 }
 
+/* .header .inner .nav .gnb li {
+    width: 120px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+} */
+
 .header .inner .nav .gnb li a {
     font-size: 32px;
+    padding: 12px 24px;
 }
 
 .header .inner .nav .gnb li:hover a {
@@ -267,7 +275,7 @@ b {
 
     overflow: visible;
     position: relative;
-
+    z-index: 7777;
 }
 
 .intro .inner {
@@ -434,12 +442,18 @@ section .title {
     text-align: center;
 }
 
-.section-01 .inner .me:hover .image {
-    background: url('../img/section1-1-2.svg') no-repeat;
+.section-01 .inner .me .imgae:hover {
+    transition: 1s;
 }
 
 .section-01 .inner .me:hover .image img {
-    display: none;
+        display: inline-block;
+    background-image: url('../img/section1-hover.svg');
+}
+
+.section-01 .inner .me:hover .image b {
+    color: #fff;
+    transition: 0.5s;
 }
 
 .section-01 .inner .me .image {
@@ -488,14 +502,56 @@ section .title {
     gap: 20px;
 }
 
+.section-01 .inner .sec01Swiper .swiper-slide strong {
+    position: relative;
+    display: block;
+}
+
+.section-01 .inner .sec01Swiper .swiper-slide strong::after {
+    content: "";
+    background: url(../img/highlight.svg) no-repeat 0 0 / contain;
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    width: 0%;
+    height: 100%;
+
+    transition: 0.5s;
+}
+
+.section-01 .inner .sec01Swiper .swiper-slide:hover strong::after {
+    width: 120%;
+}
+
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide img {
     height: 120px;
 }
+
+/* .section-01 .inner .sec01Swiper .swiper-wrapper .slide-01:hover{
+    background-image: url('../img/section1-1-2.svg');
+}
+
+.section-01 .inner .sec01Swiper .swiper-wrapper .slide-02:hover img {
+    background-image: url('../img/section1-2-2.svg');
+}
+
+.section-01 .inner .sec01Swiper .swiper-wrapper .slide-03:hover img{
+    background-image: url('../img/section1-3-2.svg');
+}
+
+.section-01 .inner .sec01Swiper .swiper-wrapper .slide-04:hover img {
+    background-image: url('../img/section1-4-2.svg');
+} */
 
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap span {
+    width: 72px;
+    display: inline-block;
 }
 
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap .design,
@@ -577,6 +633,8 @@ section .title {
     flex-direction: column;
     gap: 20px;
     overflow: visible;
+
+    width: 100%;
 }
 
 .section-02 .inner .category-tab {
@@ -588,11 +646,11 @@ section .title {
     padding-top: 40px;
     padding-bottom: 40px;
 
-    position: sticky;
+    /* position: sticky;
     top: 0;
     left: 50%;
     z-index: 99;
-    background-color: #F3F3F3;
+    background-color: #F3F3F3; */
 }
 
 .section-02 .inner .category-tab .graphic_design {
@@ -634,12 +692,6 @@ section .title {
 }
 
 .section-02 .inner .title {
-    /* height: 200px;
-    position: relative;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%); */
-
     display: inline-flex;
     align-items: center;
     padding: 60px 80px;
@@ -842,7 +894,6 @@ section .title {
 
 .section-02 .inner .sec02Swiper .swiper-wrapper {
     width: 100%;
-
 }
 
 .section-02 .inner .sec02Swiper .swiper-wrapper .swiper-slide {
@@ -1102,7 +1153,7 @@ section .title {
     bottom: 80px;
     cursor: url('../img/mouse.svg') 18 18, auto;
     background-color: transparent;
-    z-index: 99999;
+    z-index: 999;
 }
 
 .top img {
