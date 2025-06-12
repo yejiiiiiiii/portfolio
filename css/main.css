@@ -95,6 +95,10 @@ body::before {
     height: 2px;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 a,
 a:hover,
 a:focus,
@@ -109,6 +113,7 @@ button:focus {
     cursor: url('../img/pointer.svg') 16 16, auto;
     font-family: 'Lemon Bird';
     font-size: 40px;
+    appearance: none;
 }
 
 button:active {
@@ -217,12 +222,18 @@ b {
     /* 높게 띄워서 인트로보다 위에 보이게 */
     background: url('../img/paper.png') no-repeat center bottom / cover;
     box-shadow: 0 12px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.4s ease;
+}
+
+.header.hide {
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
 }
 
 .header .inner {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 8px 10px;
+    padding: 0px 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -238,20 +249,13 @@ b {
 }
 
 .header .inner .logo img {
-    width: 80px;
+    width: 70px;
 }
 
 .header .inner .nav .gnb {
     display: flex;
     gap: 120px;
 }
-
-/* .header .inner .nav .gnb li {
-    width: 120px;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-} */
 
 .header .inner .nav .gnb li a {
     font-size: 32px;
@@ -303,6 +307,68 @@ b {
     height: auto;
     user-select: none;
     pointer-events: none;
+
+    animation: floaty 3s infinite ease-in-out;
+}
+
+.intro .title img:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.intro .title img:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.intro .title img:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+.intro .title img:nth-child(4) {
+    animation-delay: 0.1s;
+}
+
+.intro .title img:nth-child(5) {
+    animation-delay: 0.7s;
+}
+
+.intro .title img:nth-child(6) {
+    animation-delay: 0.9s;
+}
+
+.intro .title img:nth-child(7) {
+    animation-delay: 0s;
+}
+
+.intro .title img:nth-child(8) {
+    animation-delay: 0.4s;
+}
+
+.intro .title img:nth-child(9) {
+    animation-delay: 0.6s;
+}
+
+@keyframes floaty {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    20% {
+        transform: translateY(-3px) rotate(-1deg);
+    }
+
+    40% {
+        transform: translateX(2px) rotate(1deg);
+    }
+
+    60% {
+        transform: translateY(3px) rotate(0.5deg);
+    }
+
+    80% {
+        transform: translateX(-2px) rotate(-0.5deg);
+    }
 }
 
 .intro .path {
@@ -338,6 +404,8 @@ b {
 .intro .text p {
     font-family: 'Lemon Bird' !important;
     font-size: 120px;
+    opacity: 0;
+    transform: scale(0.3);
 }
 
 .intro .icon-1 {
@@ -350,6 +418,8 @@ b {
     opacity: 0.9;
     user-select: none;
     pointer-events: none;
+
+    animation-delay: 0s;
 }
 
 .intro .icon-2 {
@@ -362,12 +432,33 @@ b {
     opacity: 0.9;
     user-select: none;
     pointer-events: none;
+
+    animation-delay: 0.9s;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.15);
+    }
+}
+
+.icon-1,
+.icon-2 {
+    animation: sparkle 1.2s infinite ease-in-out;
 }
 
 .main {
     padding-top: 120px;
-    background: url('../img/paper1.png') no-repeat center bottom / 100%;
-    background-size: 100% 120vh;
+    background: url('../img/paper1.png') no-repeat center bottom / contain;
+    background-size: 100% 126vh;
 }
 
 /* section 🔻 */
@@ -447,7 +538,7 @@ section .title {
 }
 
 .section-01 .inner .me:hover .image img {
-        display: inline-block;
+    display: inline-block;
     background-image: url('../img/section1-hover.svg');
 }
 
@@ -527,22 +618,6 @@ section .title {
     height: 120px;
 }
 
-/* .section-01 .inner .sec01Swiper .swiper-wrapper .slide-01:hover{
-    background-image: url('../img/section1-1-2.svg');
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .slide-02:hover img {
-    background-image: url('../img/section1-2-2.svg');
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .slide-03:hover img{
-    background-image: url('../img/section1-3-2.svg');
-}
-
-.section-01 .inner .sec01Swiper .swiper-wrapper .slide-04:hover img {
-    background-image: url('../img/section1-4-2.svg');
-} */
-
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide .p_wrap {
     display: flex;
     flex-direction: column;
@@ -581,8 +656,9 @@ section .title {
     right: 935px;
 }
 
-.section-01 .inner .sec01Swiper .swiper-button-prev {
-    right: 55px;
+.section-01 .inner .sec01Swiper .swiper-button-next:hover,
+.section-01 .inner .sec01Swiper .swiper-button-prev:hover {
+    cursor: url('../img/pointer.svg') 16 16, auto;
 }
 
 .section-01 .inner .sec01Swiper .swiper-button-prev,
@@ -654,7 +730,7 @@ section .title {
 }
 
 .section-02 .inner .category-tab .graphic_design {
-    margin-top: 120px;
+    margin-top: 60px;
 }
 
 .section-02 .inner .category-tab .tab {
@@ -722,13 +798,13 @@ section .title {
 }
 
 .section-02 .inner .category-tab {
-    padding-bottom: 80px;
+    padding-bottom: 60px;
 }
 
 .section-02 .inner .item_wrap {
     display: flex;
     flex-direction: column;
-    gap: 200px;
+    gap: 160px;
 }
 
 .section-02 .inner .item_wrap .item {
@@ -749,8 +825,8 @@ section .title {
 
 .section-02 .inner .item_wrap .item .image .second-mobile {
     position: absolute;
-    bottom: -8%;
-    left: -20%;
+    bottom: -4%;
+    left: -10%;
     rotate: -5deg;
 }
 
@@ -1070,21 +1146,91 @@ section .title {
     display: inline-block;
 }
 
-/* 🔥🔥🔥  */
 .sketch_wrapper .inner .notebook-bg img {
     display: block;
     max-width: 100%;
     height: 80vh;
 }
 
-/* 🔥🔥🔥  아이콘, 텍스트 배치
-브러쉬/지우개 아이콘으로 커서 변경
-*/
+.sketch_wrapper .inner .icon {
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.sketch_wrapper .inner .icon-01 {
+    top: 30px;
+    left: 240px;
+}
+
+.sketch_wrapper .inner .icon-02 {
+    bottom: 200px;
+    right: 40px;
+}
+
+.sketch_wrapper .inner .icon-03 {
+    bottom: 260px;
+    right: 90px;
+}
+
+.sketch_wrapper .inner .icon-04 {
+    bottom: 120px;
+    left: 70px
+}
+
+.sketch_wrapper .inner .text {
+    position: absolute;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.sketch_wrapper .inner .text p {
+    font-size: 32px;
+}
+
+.sketch_wrapper .inner .text-01 {
+    top: 140px;
+    right: 80px;
+}
+
+.sketch_wrapper .inner .text-02 {
+    top: 190px;
+    right: 80px;
+}
 
 #drawingPad {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 1;
+    cursor: url('../img/brush.png') 4 4, auto;
+}
+
+#drawingPad.eraser-cursor {
+    cursor: url('../img/eraser-img.png') 8 8, auto;
+}
+
+#eraserBtn {
+    width: 240px;
+    height: 80px;
+    display: block;
+    margin: 24px auto 0;
+    padding: 20px;
+    z-index: 10;
+    position: relative;
+    background: url('../img/eraser.svg') no-repeat center center / contain;
+}
+
+#eraserBtn:hover {
+    background-image: url('../img/eraser_hover.svg');
+    color: #fff;
+}
+
+#eraserBtn:active {
+    background-image: url('../img/eraser_click.svg');
 }
 
 /* paper-slide */

@@ -12,6 +12,8 @@
     <script src="lib/jquery-3.7.1.min.js"></script>
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <script>
         $(function () {
             //탑버튼
@@ -126,8 +128,41 @@
                 ) {
                     $('.landing').css('display', 'none');
                     $('body').css('overflow', 'auto');
+
+                    gsap.fromTo(
+                        '.text p',
+                        { scale: 0, opacity: 0 },
+                        {
+                            scale: 1,
+                            opacity: 1,
+                            duration: 1,
+                            ease: 'bounce.out'
+                        }
+                    );
                 }
             }); //랜딩페이지 end
+
+            //헤더 스크롤
+            let lastScroll = 0;
+            const $header = $('.header');
+
+            $(window).on('scroll', function () {
+                const currentScroll = $(this).scrollTop();
+
+                if (currentScroll <= 0) {
+                    $header.removeClass('hide');
+                    lastScroll = 0;
+                    return;
+                }
+
+                if (currentScroll > lastScroll) {
+                    $header.addClass('hide');
+                } else {
+                    $header.removeClass('hide');
+                }
+
+                lastScroll = currentScroll;
+            });
 
             //섹션1 슬라이드
             var swiper = new Swiper(".sec01Swiper", {
@@ -250,6 +285,14 @@
                 isErasing = !isErasing;
                 eraserBtn.textContent = isErasing ? 'Brush' : 'Eraser';
                 eraserBtn.classList.toggle('active', isErasing);
+
+                if (isErasing) {
+                    canvas.classList.add('eraser-cursor');
+                    brushSize = 30; // 지우개 크기 키움
+                } else {
+                    canvas.classList.remove('eraser-cursor');
+                    brushSize = 5; // 일반 브러시 크기 복원
+                }
             });
 
             // 🔧 캔버스 크기 초기화
@@ -279,8 +322,13 @@
             function isOverPaper(x, y) {
                 if (!maskImageData) return false;
                 const width = maskCanvas.width;
+                const height = maskCanvas.height;
+
+                if (x < 0 || y < 0 || x >= width || y >= height) return false;
+
                 const idx = (y * width + x) * 4;
                 return maskImageData[idx + 3] > 0;
+
             }
 
             // 🖌️ 마우스 드로잉
@@ -808,7 +856,7 @@
                                 <div class="swiper-slide">
                                     <img src="img/joy.jpg" alt="graphic_design05">
                                 </div><!-- .swiper-slide end -->
-                               
+
                             </div>
                         </div><!-- .inner end -->
                 </section><!-- .section-02 end -->
@@ -839,7 +887,7 @@
                         <button type="button" class="pdf_button">
                             <div class="open">
                                 <img src="img/button.svg" alt="open_pdf">
-                                <a href="#">open &nbsp; pdf</a>
+                                <a href="pdf/portfolio.pdf">open &nbsp; pdf</a>
                             </div>
 
                             <div class="hover">
@@ -856,6 +904,26 @@
                         <div class="notebook-bg">
                             <img id="paperImage" src="img/sketch.png" alt="sketch_notebook_image">
                         </div><!-- .notebook-bg end -->
+                        <div class="icon icon-01">
+                            <img src="img/cat.png" alt="cat_icon">
+                        </div>
+                        <div class="icon icon-02">
+                            <img src="img/baseball.png" alt="baseball_icon">
+                        </div>
+                        <div class="icon icon-03">
+                            <img src="img/hearts.png" alt="heart_icon">
+                        </div>
+                        <div class="icon icon-04">
+                            <img src="img/smiling-star.png" alt="star_icon">
+                        </div>
+                        <div class="text_wrap">
+                            <div class="text text-01">
+                                <p>지레 겁먹지 말기</p>
+                            </div>
+                            <div class="text text-02">
+                                <p>행복한 상상을 매일 하기 ☘</p>
+                            </div>
+                        </div><!-- .text_wrap end -->
                         <canvas id="drawingPad"></canvas>
                         <button id="eraserBtn">Eraser</button>
                     </div><!-- .inner end -->
