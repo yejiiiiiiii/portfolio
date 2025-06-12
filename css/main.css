@@ -1222,6 +1222,7 @@ section .title {
     z-index: 10;
     position: relative;
     background: url('../img/eraser.svg') no-repeat center center / contain;
+     transition: 0.5s;
 }
 
 #eraserBtn:hover {
