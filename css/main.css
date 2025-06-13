@@ -71,6 +71,7 @@ body {
     background-color: #F3F3F3;
     cursor: url('../img/mouse.svg') 18 18, auto;
     overflow: hidden;
+    min-width: 1200px;
 }
 
 body:active {
@@ -150,8 +151,6 @@ b {
 .page-container {
     perspective: 1500px;
     perspective-origin: center center;
-    position: relative;
-    z-index: 9999;
 }
 
 
@@ -465,7 +464,7 @@ b {
 
 /* section 🔻 */
 .section {
-    margin-top: 120px;
+    padding-top: 120px;
     padding-bottom: 120px;
 }
 
@@ -598,22 +597,22 @@ section .title {
 .section-01 .inner .sec01Swiper .swiper-slide strong {
     position: relative;
     display: block;
+    width: 100%;
 }
 
 .section-01 .inner .sec01Swiper .swiper-slide strong::after {
     content: "";
-    background: url(../img/highlight.svg) no-repeat 0 0 / contain;
+    background: url(../img/highlight.svg) no-repeat 0 0 / 200px 12px;
     position: absolute;
     bottom: -30px;
     left: 0;
     width: 0%;
     height: 100%;
-
     transition: 0.5s;
 }
 
 .section-01 .inner .sec01Swiper .swiper-slide:hover strong::after {
-    width: 120%;
+    width: 100%;
 }
 
 .section-01 .inner .sec01Swiper .swiper-wrapper .swiper-slide img {
@@ -1224,7 +1223,7 @@ section .title {
     z-index: 10;
     position: relative;
     background: url('../img/eraser.svg') no-repeat center center / contain;
-     transition: 0.5s;
+    transition: 0.5s;
 }
 
 #eraserBtn:hover {
@@ -1303,6 +1302,8 @@ section .title {
     cursor: url('../img/mouse.svg') 18 18, auto;
     background-color: transparent;
     z-index: 999;
+
+    display: none;
 }
 
 .top img {
@@ -1312,6 +1313,10 @@ section .title {
 
 .top:active {
     cursor: url('../img/click.svg') 16 16, auto;
+}
+
+.top.active {
+    display: block;
 }
 
 .top:active img {

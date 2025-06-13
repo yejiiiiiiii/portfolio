@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!--  <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <title>YEJI's PORTFOLIO</title>
     <link rel="icon" href="img/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -145,9 +145,19 @@
             //헤더 스크롤
             let lastScroll = 0;
             const $header = $('.header');
+             
+                let sectionTop = $('.main').offset().top;  //section-01이 상단에서 떨어진 세로값
+                console.log(sectionTop)
+
+                //조건식(scrollBar의 값이 sectonTop값보다 크거나 같을 때) 
+                //조건이 맞으면 section-01에게 클래스명 active추가
+                //조건이 맞지 않으면 section-01에게 클래스명 active삭제
+
+               
 
             $(window).on('scroll', function () {
                 const currentScroll = $(this).scrollTop();
+                let scrollBar = $(window).scrollTop(); //상단 스크롤바 값
 
                 if (currentScroll <= 0) {
                     $header.removeClass('hide');
@@ -162,6 +172,14 @@
                 }
 
                 lastScroll = currentScroll;
+                console.log(scrollBar)
+                
+
+                 if(scrollBar >= 1000) {
+                    $('.top').addClass('active');
+                } else {
+                    $('.top').removeClass('active');
+                }
             });
 
             //섹션1 슬라이드
@@ -466,6 +484,8 @@
                     }
                 });
             }
+
+            
         });
         //script end
 
@@ -855,6 +875,9 @@
                                 </div><!-- .swiper-slide end -->
                                 <div class="swiper-slide">
                                     <img src="img/joy.jpg" alt="graphic_design05">
+                                </div><!-- .swiper-slide end -->
+                                <div class="swiper-slide">
+                                    <img src="img/fluffy-rough.jpg" alt="graphic_design06">
                                 </div><!-- .swiper-slide end -->
 
                             </div>
