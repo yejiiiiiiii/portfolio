@@ -150,6 +150,8 @@ b {
 .page-container {
     perspective: 1500px;
     perspective-origin: center center;
+    position: relative;
+    z-index: 9999;
 }
 
 
